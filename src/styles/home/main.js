@@ -10,6 +10,7 @@ export const Menu = styled.div`
 	display: flex;
 	align-items: center;
 	color: ${({ theme }) => theme.white};
+	z-index: 20;
 
 	svg {
 		cursor: pointer;
@@ -58,10 +59,17 @@ export const WeatherIconCircle = styled.div`
 	margin: 0 10px 0 30px;
 	cursor: pointer;
 	position: relative;
+	transition: background 0.1s;
 
 	:hover {
 		background: rgba(255, 255, 255, 0.2);
 	}
+
+	${({ isopen }) =>
+		isopen &&
+		css`
+			background: rgba(255, 255, 255, 0.2);
+		`}
 
 	img {
 		max-width: 40px;
@@ -73,7 +81,7 @@ export const MenuMoreWeatherInfo = styled.div`
 	bottom: 0;
 	left: 0;
 	background: #fff;
-	padding: 15px;
+	padding: ${({ nopadd }) => (nopadd ? "0" : "15px")};
 	min-width: 250px;
 	max-width: 300px;
 	border-radius: 15px;
@@ -104,6 +112,21 @@ export const MenuRow = styled.div`
 	gap: 10px;
 	justify-content: ${({ space }) => (space ? "space-between" : null)};
 	font-size: ${({ space }) => (space ? "18px" : "15px")};
+	padding: ${({ padd }) => (padd ? "15px" : "0")};
+
+	svg {
+		color: ${({ theme }) => theme.text};
+		font-size: 20px;
+	}
+
+	${({ hov }) =>
+		hov &&
+		css`
+			:hover {
+				background: rgba(0, 0, 0, 0.1);
+				cursor: pointer;
+			}
+		`}
 
 	div {
 		white-space: nowrap;
@@ -205,4 +228,53 @@ export const FunctionBox = styled.div`
 	svg {
 		cursor: pointer;
 	}
+`;
+
+export const CardsWrapper = styled.div`
+	padding-top: 30px;
+	display: flex;
+	gap: 5px;
+	flex-wrap: wrap;
+	justify-content: center;
+	max-width: 650px;
+`;
+
+export const Card = styled.a`
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	color: #dcdfe3;
+	text-shadow: 0 0 2px black;
+	width: 100px;
+	min-height: 100px;
+	gap: 5px;
+
+	:hover > div:first-of-type {
+		background: #fff;
+	}
+`;
+
+export const CardFavicon = styled.div`
+	background: #efefef66;
+	box-shadow: 0 0 1px #111;
+	width: 50px;
+	height: 50px;
+	border-radius: 50%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	transition: background 0.15s;
+	cursor: pointer;
+	${({ black }) =>
+		black &&
+		css`
+			/* filter: drop-shadow(0 0 2px black); */
+			color: #121212;
+		`}
+`;
+
+export const CardImg = styled.img`
+	width: 36px;
+	border-radius: 50%;
 `;

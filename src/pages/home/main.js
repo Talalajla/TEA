@@ -1,41 +1,33 @@
 import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import Images from "./lapse/imgs";
-import { MdSearch } from "react-icons/md";
+import { AiOutlinePlusCircle } from "react-icons/ai";
+import { BiCurrentLocation } from "react-icons/bi";
 import { FcGoogle } from "react-icons/fc";
 import { HiMenuAlt4 } from "react-icons/hi";
+import { MdSearch } from "react-icons/md";
 import {
 	Content,
 	FunctionBox,
 	Greetings,
 	MainBackground,
 	Menu,
-	MenuHr,
-	MenuIcon,
 	MenuMoreWeatherInfo,
 	MenuRow,
-	MenuRowData,
-	MenuRowDesc,
 	SearchBox,
 	SearchForm,
 	UrlInput,
-	WeatherIconCircle,
 	WeatherMenuInfo,
 	Wrapper,
 } from "../../styles/home/main";
-// More Menu Icons
-import sunriseIco from "../../files/home/sunrise.png";
-import sunsetIco from "../../files/home/sunset.png";
-import termo1 from "../../files/home/termo1.png";
-import termo2 from "../../files/home/termo2.png";
-import rain from "../../files/home/water.png";
-import cloud from "../../files/home/cloud.png";
-import snow from "../../files/home/snowflake.png";
-import humidity from "../../files/home/humidity.png";
-import wind from "../../files/home/wind.png";
-import winddir from "../../files/home/winddir.png";
-import { MdKeyboardArrowUp, MdKeyboardArrowDown } from "react-icons/md";
+
 import { useClickAway } from "react-use";
+import WeatherWidget from "./parts/weatherwidget";
+
+import ModalRoot from "../../components/modal/modalRoot";
+import ModalService from "../../components/modal/services/modalService";
+import AddtabModal from "./addtabModal";
+import Cards from "./parts/cards";
 
 const CurrentImage = styled.div`
 	width: 100%;
@@ -50,10 +42,11 @@ const CurrentImage = styled.div`
 `;
 
 const Home = () => {
-	const [city, setCity] = useState("Bralin");
+	const [city, setCity] = useState("bralin");
 	const [unit, setUnit] = useState("°C");
 	const [menu, openMenu] = useState(false);
-	const menuRef = useRef("");
+	const [options, openOptions] = useState(false);
+	const optionsRef = useRef("");
 
 	const [windDir, setWindDir] = useState("");
 	const [data, setData] = useState([]);
@@ -68,9 +61,9 @@ const Home = () => {
 	// const apikey = "0849360447e69eda07189e0b383ff858";
 
 	useClickAway(
-		menuRef,
+		optionsRef,
 		() => {
-			openMenu(false);
+			openOptions(false);
 		},
 		["mouseup"]
 	);
@@ -87,7 +80,7 @@ const Home = () => {
 			console.log("first load");
 		};
 		if (status === "idle") fetchData();
-	}, [city]);
+	}, [city, status]);
 
 	useEffect(() => {
 		const interval = setInterval(async () => {
@@ -121,7 +114,6 @@ const Home = () => {
 		setSunset(sunsetTime);
 
 		const degrees = data.wind.deg;
-		console.log(degrees);
 		if (degrees < 22.5 || degrees >= 337.5) setWindDir("płn.");
 		else if (degrees >= 22.5 && degrees < 67.5) setWindDir("płn. wsch.");
 		else if (degrees >= 67.5 && degrees < 112.5) setWindDir("wsch.");
@@ -151,132 +143,40 @@ const Home = () => {
 	setInterval(() => figureTimeThings(), 1000);
 	if (status === "Done" && sunrise === "") setAdditionals();
 
+	const addModal = () => {
+		ModalService.open(AddtabModal);
+	};
+
+	// console.log("loop");
+
 	return (
 		<Wrapper>
+			<ModalRoot />
 			<Menu>
-				<HiMenuAlt4 />
+				<HiMenuAlt4 onClick={() => openOptions(!options)} />
+				<MenuMoreWeatherInfo ref={optionsRef} show={options} nopadd>
+					<MenuRow padd hov onClick={addModal}>
+						<AiOutlinePlusCircle />
+						<span>Add new card</span>
+					</MenuRow>
+					<MenuRow padd hov>
+						<BiCurrentLocation />
+						<span>Change current city</span>
+					</MenuRow>
+				</MenuMoreWeatherInfo>
 				{status === "Done" && (
 					<>
-						<WeatherIconCircle ref={menuRef}>
-							<img src={icon} alt="weather icon" onClick={() => openMenu(!menu)} />
-							<MenuMoreWeatherInfo show={menu}>
-								<MenuRow space>
-									<MenuRowData>{data.name}</MenuRowData>
-									<MenuRowData>{data.sys.country}</MenuRowData>
-								</MenuRow>
-								<MenuRow>{data.weather[0].description}</MenuRow>
-								<MenuHr />
-								<MenuRow>Wschód i zachód słońca</MenuRow>
-								<MenuRow>
-									<MenuRowDesc>
-										<MenuIcon title="wschód słońca" src={sunsetIco}></MenuIcon>
-										<MenuRowData>{sunset}</MenuRowData>
-									</MenuRowDesc>
-									<MenuRowDesc>
-										<MenuIcon title="zachód słońca" src={sunriseIco}></MenuIcon>
-										<MenuRowData>{sunrise}</MenuRowData>
-									</MenuRowDesc>
-								</MenuRow>
-								<MenuHr />
-								<MenuRow>Temperatura</MenuRow>
-								<MenuRow>
-									<MenuRowDesc>
-										<MenuIcon title="temperatura" src={termo1}></MenuIcon>
-										<MenuRowData>
-											{data.main.temp} {unit}
-										</MenuRowData>
-									</MenuRowDesc>
-									<MenuRowDesc>
-										<MenuIcon title="temperatura odczuwalna" src={termo2}></MenuIcon>
-										<MenuRowData>
-											{data.main.feels_like} {unit}
-										</MenuRowData>
-									</MenuRowDesc>
-								</MenuRow>
-								<MenuRow>
-									<MenuRowDesc col="green">
-										<MdKeyboardArrowUp title="temperatura minimalna" />
-										<MenuRowData>
-											{data.main.temp_min} {unit}
-										</MenuRowData>
-									</MenuRowDesc>
-									<MenuRowDesc col="red">
-										<MdKeyboardArrowDown title="temperatura maksymalna" />
-										<MenuRowData>
-											{data.main.temp_max} {unit}
-										</MenuRowData>
-									</MenuRowDesc>
-								</MenuRow>
-								{data.snow && (
-									<>
-										<MenuHr />
-										<MenuRow>Opady śniegu</MenuRow>
-										<MenuRow>
-											<MenuRowDesc>
-												<MenuIcon title="wysokość opadów śniegu, ostatnia godzina" src={snow} />
-												<MenuRowData>{data.snow["1h"]}mm</MenuRowData>
-											</MenuRowDesc>
-											{data.snow["3h"] && (
-												<MenuRowDesc>
-													<MenuIcon title="wysokość opadów śniegu, ostatnie 3 godziny" src={snow} />
-													<MenuRowData>{data.snow["3h"]}mm</MenuRowData>
-												</MenuRowDesc>
-											)}
-										</MenuRow>
-									</>
-								)}
-								{data.rain && (
-									<>
-										<MenuHr />
-										<MenuRow>Opady deszczu</MenuRow>
-										<MenuRow>
-											<MenuRowDesc>
-												<MenuIcon title="wysokość opadów deszczu, ostatnia godzina" src={rain} />
-												<MenuRowData>{data.rain["1h"]} mm</MenuRowData>
-											</MenuRowDesc>
-											{data.rain["3h"] && (
-												<MenuRowDesc>
-													<MenuIcon title="wysokość opadów deszczu, ostatnie 3 godziny" src={rain} />
-													<MenuRowData>{data.rain["3h"]} mm</MenuRowData>
-												</MenuRowDesc>
-											)}
-										</MenuRow>
-									</>
-								)}
-								<MenuHr />
-								<MenuRow>Dodatkowe</MenuRow>
-
-								<MenuRow>
-									<MenuRowDesc>
-										<MenuIcon title="procent zachmurzenia" src={cloud} />
-										<MenuRowData>{data.clouds.all}%</MenuRowData>
-									</MenuRowDesc>
-									<MenuRowDesc>
-										<MenuIcon title="prędkość wiatru" src={wind} />
-										<MenuRowData>{data.wind.speed} m/s</MenuRowData>
-									</MenuRowDesc>
-								</MenuRow>
-								<MenuRow>
-									<MenuRowDesc>
-										<MenuIcon title="wilgotność powietrza" src={humidity} />
-										<MenuRowData>{data.main.humidity}%</MenuRowData>
-									</MenuRowDesc>
-									<MenuRowDesc>
-										<MenuIcon title="kierunek wiatru" src={winddir} />
-										<MenuRowData>{windDir}</MenuRowData>
-									</MenuRowDesc>
-								</MenuRow>
-								<MenuHr />
-								<MenuRow>
-									<MenuRowDesc>Dane z godz.</MenuRowDesc>
-									<MenuRowDesc>
-										{new Date(data.dt * 1000).getHours() < 10 ? "0" : ""}
-										{new Date(data.dt * 1000).getHours()}:{new Date(data.dt * 1000).getMinutes() < 10 ? "0" : ""}
-										{new Date(data.dt * 1000).getMinutes()}
-									</MenuRowDesc>
-								</MenuRow>
-							</MenuMoreWeatherInfo>
-						</WeatherIconCircle>
+						<WeatherWidget
+							data={data}
+							windDir={windDir}
+							unit={unit}
+							menu={menu}
+							icon={icon}
+							sr={sunrise}
+							ss={sunset}
+							toggleMenu={() => openMenu(!menu)}
+							closeMenu={() => openMenu(false)}
+						/>
 						<WeatherMenuInfo>{data.name}</WeatherMenuInfo>
 						<WeatherMenuInfo>
 							{data.main.temp} <sup>{unit}</sup>
@@ -298,6 +198,7 @@ const Home = () => {
 						</FunctionBox>
 					</SearchBox>
 				</SearchForm>
+				{localStorage.getItem("cardnames") && <Cards />}
 			</Content>
 			<MainBackground>
 				<CurrentImage nr={hour} />
