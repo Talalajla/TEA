@@ -1,6 +1,4 @@
 import React, { useEffect, useRef, useState } from "react";
-import styled from "styled-components";
-import Images from "./lapse/imgs";
 import { AiOutlinePlusCircle } from "react-icons/ai";
 import { BiCurrentLocation } from "react-icons/bi";
 import { FcGoogle } from "react-icons/fc";
@@ -10,7 +8,6 @@ import {
 	Content,
 	FunctionBox,
 	Greetings,
-	MainBackground,
 	Menu,
 	MenuMoreWeatherInfo,
 	MenuRow,
@@ -18,7 +15,6 @@ import {
 	SearchForm,
 	UrlInput,
 	WeatherMenuInfo,
-	Wrapper,
 } from "../../styles/home/main";
 
 import { useClickAway } from "react-use";
@@ -27,19 +23,9 @@ import WeatherWidget from "./parts/weatherwidget";
 import ModalRoot from "../../components/modal/modalRoot";
 import ModalService from "../../components/modal/services/modalService";
 import AddtabModal from "./addtabModal";
+import EdittabModal from "./edittabModal";
 import Cards from "./parts/cards";
-
-const CurrentImage = styled.div`
-	width: 100%;
-	height: 100%;
-	background-position: center bottom;
-	background-image: ${({ nr }) => {
-		const res = Object.entries(Images);
-		let src;
-		res.map((item) => (+item[0] === nr ? (src = item[1]) : null));
-		return `url(${src})`;
-	}};
-`;
+import Background from "../../layout/background";
 
 const Home = () => {
 	const [city, setCity] = useState("bralin");
@@ -47,6 +33,7 @@ const Home = () => {
 	const [menu, openMenu] = useState(false);
 	const [options, openOptions] = useState(false);
 	const optionsRef = useRef("");
+	const [res, setRes] = useState();
 
 	const [windDir, setWindDir] = useState("");
 	const [data, setData] = useState([]);
@@ -55,7 +42,6 @@ const Home = () => {
 	const [sunrise, setSunrise] = useState("");
 	const [sunset, setSunset] = useState("");
 
-	const [hour, setHour] = useState();
 	const [message, setMessage] = useState("Good morning, ");
 	const apikey = "c60621f6b01ac75d9cb4f8afef300fdc";
 	// const apikey = "0849360447e69eda07189e0b383ff858";
@@ -97,14 +83,6 @@ const Home = () => {
 		};
 	}, [city]);
 
-	const figureTimeThings = () => {
-		const hourNow = new Date().getHours();
-		if (hour !== hourNow) {
-			setHour(hourNow);
-			figureMessage(hourNow);
-		}
-	};
-
 	const setAdditionals = () => {
 		const tdSunrise = new Date(data.sys.sunrise * 1000);
 		const tdSunset = new Date(data.sys.sunset * 1000);
@@ -124,12 +102,6 @@ const Home = () => {
 		else if (degrees >= 292.5 && degrees < 337.5) setWindDir("płn. zach.");
 	};
 
-	const figureMessage = (hourNow) => {
-		if (hourNow >= 6 && hourNow < 12) setMessage("Good morning, ");
-		else if (hourNow >= 12 && hourNow < 18) setMessage("Good afternoon, ");
-		else if ((hourNow >= 18 && hourNow <= 24) || hourNow < 6) setMessage("Good afternoon, ");
-	};
-
 	const searchUrl = (e) => {
 		e.preventDefault();
 		const whatDoWeSearch = e.currentTarget.url.value;
@@ -139,19 +111,20 @@ const Home = () => {
 		e.currentTarget.url.value = "";
 	};
 
-	figureTimeThings();
-	setInterval(() => figureTimeThings(), 1000);
 	if (status === "Done" && sunrise === "") setAdditionals();
 
 	const addModal = () => {
 		ModalService.open(AddtabModal);
 	};
 
-	// console.log("loop");
+	const addEditModal = () => {
+		ModalService.open(EdittabModal);
+	};
+	const refre = () => setRes({});
 
 	return (
-		<Wrapper>
-			<ModalRoot />
+		<Background>
+			{/* <ModalRoot refreshCards={refre} /> */}
 			<Menu>
 				<HiMenuAlt4 onClick={() => openOptions(!options)} />
 				<MenuMoreWeatherInfo ref={optionsRef} show={options} nopadd>
@@ -184,8 +157,14 @@ const Home = () => {
 					</>
 				)}
 			</Menu>
+
 			<Content>
-				<Greetings>{message} Taliyah!</Greetings>
+				<Greetings>
+					<span>{message} Taliyah!</span>
+					<code>{`${new Date().getHours() < 10 ? "0" : ""}${new Date().getHours()}:${
+						new Date().getMinutes() < 10 ? "0" : ""
+					}${new Date().getMinutes()}`}</code>
+				</Greetings>
 				<SearchForm onSubmit={searchUrl}>
 					<SearchBox>
 						<UrlInput name="url" placeholder="What do you want to search?" />
@@ -198,12 +177,9 @@ const Home = () => {
 						</FunctionBox>
 					</SearchBox>
 				</SearchForm>
-				{localStorage.getItem("cardnames") && <Cards />}
+				{localStorage.getItem("cardnames") && <Cards addCard={() => addModal} refresh={res} openEdit={() => addEditModal} />}
 			</Content>
-			<MainBackground>
-				<CurrentImage nr={hour} />
-			</MainBackground>
-		</Wrapper>
+		</Background>
 	);
 };
 

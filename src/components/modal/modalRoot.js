@@ -2,8 +2,12 @@ import React, { useEffect, useState } from "react";
 import { ModalSection } from "../../styles/modal/main";
 import ModalService from "./services/modalService";
 
-const ModalRoot = () => {
+const ModalRoot = (props) => {
 	const [modal, setModal] = useState({});
+
+	const refresh = () => {
+		props.refreshCards();
+	};
 
 	useEffect(() => {
 		ModalService.on("open", ({ component, props }) => {
@@ -21,7 +25,7 @@ const ModalRoot = () => {
 
 	return (
 		<ModalSection isRoot={modal.component}>
-			{ModalComponent && <ModalComponent {...modal.props} close={modal.close} style={{ display: "block" }} />}
+			{ModalComponent && <ModalComponent {...modal.props} close={modal.close} refreshCards={refresh} style={{ display: "block" }} />}
 		</ModalSection>
 	);
 };

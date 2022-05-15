@@ -12,8 +12,10 @@ const AddtabModal = (props) => {
 	// if (JSON.parse(localStorage.getItem("cardnames") == null)) localStorage.setItem("cardurls", []);
 
 	const saveCard = () => {
-		const cardname = form.current.name.value;
-		const cardurl = form.current.url.value;
+		let cardname = form.current.name.value;
+		let cardurl = form.current.url.value;
+		if (cardurl.startsWith("http://")) cardurl = cardurl.slice(7);
+		if (cardurl.startsWith("https://")) cardurl = cardurl.slice(8);
 
 		const cardNames = JSON.parse(localStorage.getItem("cardnames")) ? JSON.parse(localStorage.getItem("cardnames")) : [];
 		const cardUrls = JSON.parse(localStorage.getItem("cardurls")) ? JSON.parse(localStorage.getItem("cardurls")) : [];
@@ -24,6 +26,7 @@ const AddtabModal = (props) => {
 		localStorage.setItem("cardnames", JSON.stringify(cardNames));
 		localStorage.setItem("cardurls", JSON.stringify(cardUrls));
 		props.close();
+		props.refreshCards();
 	};
 
 	return (

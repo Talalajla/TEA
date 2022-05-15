@@ -1,29 +1,88 @@
-import React from "react";
-import { Card, CardFavicon, CardImg, CardsWrapper } from "../../../styles/home/main";
-import { AiOutlinePlus } from "react-icons/ai";
+import React, { useEffect, useRef, useState } from "react";
+import { Card, CardEdit, CardFavicon, CardImg, CardLink, CardMenu, CardsWrapper, MenuWrapper } from "../../../styles/home/main";
+import { AiOutlinePlus, AiTwotoneEdit } from "react-icons/ai";
+import { BsThreeDots, BsTrashFill } from "react-icons/bs";
+import { useClickAway } from "react-use";
 
-const Cards = () => {
+const Cards = (props) => {
 	const cardsNames = JSON.parse(localStorage.getItem("cardnames"));
 	const cardsUrls = JSON.parse(localStorage.getItem("cardurls"));
+	const menu = useRef("");
+	const [isopen, openMenu] = useState(false);
+
+	useClickAway(
+		menu,
+		() => {
+			openMenu(false);
+		},
+		["mouseup"]
+	);
+
+	const deleteItem = () => {
+		const element = document.querySelector(".selected").querySelectorAll("a div");
+		const name = element[1].textContent;
+		const url = element[0].dataset.url;
+		console.log(name, url);
+
+		const cardNames = JSON.parse(localStorage.getItem("cardnames"));
+		const cardUrls = JSON.parse(localStorage.getItem("cardurls"));
+		cardNames.forEach((itemName, index) => (itemName === name ? cardNames.splice(index, 1) : null));
+		cardUrls.forEach((itemUrl, index) => (itemUrl === url ? cardUrls.splice(index, 1) : null));
+
+		localStorage.setItem("cardnames", JSON.stringify(cardNames));
+		localStorage.setItem("cardurls", JSON.stringify(cardUrls));
+		openMenu(false);
+	};
+
+	const relocateDialog = (e) => {
+		const el = e.currentTarget;
+		const cards = Array.from(document.getElementsByClassName("card"));
+		cards.forEach((card) => card.classList.remove("selected"));
+		el.parentElement.classList.add("selected");
+		//@set dialog position
+		const top = el.getBoundingClientRect().top;
+		const left = el.getBoundingClientRect().left;
+		menu.current.style.left = `${left - 75}px`;
+		menu.current.style.top = `${top}px`;
+
+		openMenu(true);
+	};
 
 	return (
 		<CardsWrapper>
 			{cardsNames.map((item, index) => (
-				<Card key={index} href={`https://${cardsUrls[index]}`} target="_blank">
-					<CardFavicon>
-						<CardImg src={`https://www.google.com/s2/favicons?domain=${cardsUrls[index]}&sz=128`} />
-					</CardFavicon>
-					<div>{item}</div>
+				<Card key={index} target="_blank" className="card">
+					<CardEdit onClick={relocateDialog}>
+						<BsThreeDots />
+					</CardEdit>
+					<CardLink href={`https://${cardsUrls[index]}`}>
+						<CardFavicon data-url={cardsUrls[index]}>
+							<CardImg src={`https://www.google.com/s2/favicons?domain=${cardsUrls[index]}&sz=128`} />
+						</CardFavicon>
+						<div>{item}</div>
+					</CardLink>
 				</Card>
 			))}
 			{cardsNames.length < 12 && (
-				<Card>
+				<Card onClick={props.addCard()} adder>
 					<CardFavicon black>
 						<AiOutlinePlus />
 					</CardFavicon>
-					<div>Dodaj nowy</div>
+					<div>Dodaj skrót</div>
 				</Card>
 			)}
+			<CardMenu ref={menu} open={isopen}>
+				<MenuWrapper>
+					<button onClick={props.openEdit()}>
+						<AiTwotoneEdit />
+						Edytuj skrót
+					</button>
+					<button onClick={deleteItem}>
+						<BsTrashFill />
+						Usuń skrót
+					</button>
+				</MenuWrapper>
+			</CardMenu>
 		</CardsWrapper>
 	);
 };

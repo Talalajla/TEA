@@ -140,7 +140,7 @@ export default function WeatherWidget(props) {
 				<MenuHr />
 				<MenuRow>
 					<MenuRowDesc>Dane z godz.</MenuRowDesc>
-					<MenuRowDesc>
+					<MenuRowDesc flexend>
 						{new Date(data.dt * 1000).getHours() < 10 ? "0" : ""}
 						{new Date(data.dt * 1000).getHours()}:{new Date(data.dt * 1000).getMinutes() < 10 ? "0" : ""}
 						{new Date(data.dt * 1000).getMinutes()}

@@ -29,6 +29,7 @@ export const Wrapper = styled.div`
 
 export const MainBackground = styled.div`
 	position: absolute;
+	top: 0;
 	width: 100%;
 	height: 100%;
 	z-index: 1;
@@ -149,7 +150,7 @@ export const MenuRowDesc = styled.div`
 	gap: 5px;
 	flex: 1;
 	max-width: 50%;
-	justify-content: center;
+	justify-content: ${({ flexend }) => (flexend ? "flex-end" : "flex-start")};
 
 	${({ col }) =>
 		col &&
@@ -164,7 +165,7 @@ export const MenuRowDesc = styled.div`
 		`}
 
 	svg {
-		font-size: 20px;
+		font-size: 23px;
 	}
 `;
 export const MenuRowData = styled.div``;
@@ -182,9 +183,15 @@ export const WeatherMenuInfo = styled.div`
 // ? Content
 
 export const Greetings = styled.div`
-	font-size: 30px;
 	padding: 10px 0;
 	color: #eee;
+	display: flex;
+	justify-content: space-between;
+	font-size: 20px;
+
+	code {
+		padding: 2px;
+	}
 
 	@media (max-width: 800px) {
 		font-size: 20px;
@@ -239,42 +246,138 @@ export const CardsWrapper = styled.div`
 	max-width: 650px;
 `;
 
-export const Card = styled.a`
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-	align-items: center;
-	color: #dcdfe3;
-	text-shadow: 0 0 2px black;
+export const Card = styled.div`
+	position: relative;
 	width: 100px;
-	min-height: 100px;
-	gap: 5px;
+	min-height: 110px;
+	color: #dcdfe3;
+	z-index: 2;
 
-	:hover > div:first-of-type {
-		background: #fff;
+	${({ adder }) =>
+		adder &&
+		css`
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			gap: 5px;
+			cursor: pointer;
+			text-shadow: 0 0 3px black;
+		`}
+
+	:hover > div {
+		opacity: 1;
+	}
+	:hover a > div {
+		opacity: 1;
 	}
 `;
 
+export const CardLink = styled.a`
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	cursor: pointer;
+	gap: 8px;
+	color: #dcdfe3;
+	text-shadow: 0 0 3px black;
+	margin: 20px 10px 0;
+	height: calc(100% - 20px);
+`;
+
 export const CardFavicon = styled.div`
-	background: #efefef66;
+	background: #fff;
 	box-shadow: 0 0 1px #111;
-	width: 50px;
-	height: 50px;
+	width: 60px;
+	height: 60px;
 	border-radius: 50%;
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	transition: background 0.15s;
-	cursor: pointer;
+	transition: opacity 0.15s;
+	opacity: 0.8;
+
+	+ div {
+		font-size: 13px;
+		width: 100%;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		display: -webkit-box;
+		-webkit-line-clamp: 2;
+		-webkit-box-orient: vertical;
+		word-wrap: break-word;
+		text-align: center;
+	}
+
+	svg {
+		font-size: 20px;
+	}
+
 	${({ black }) =>
 		black &&
 		css`
 			/* filter: drop-shadow(0 0 2px black); */
 			color: #121212;
+			margin-top: 20px;
 		`}
 `;
 
 export const CardImg = styled.img`
-	width: 36px;
+	width: 32px;
 	border-radius: 50%;
+`;
+
+export const CardEdit = styled.div`
+	position: absolute;
+	top: 0;
+	right: 5px;
+	opacity: 0;
+	transition: opacity 0.2s;
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+
+	svg {
+		font-size: 20px;
+		color: #fff;
+	}
+`;
+
+export const CardMenu = styled.dialog`
+	margin: 0;
+	position: absolute;
+	left: 0;
+	top: 0;
+	z-index: 3;
+	border: 1px solid ${({ theme }) => theme.background2};
+	border-radius: 5px;
+	padding: 2px;
+	min-width: 150px;
+`;
+
+export const MenuWrapper = styled.div`
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 3px;
+
+	button {
+		border: none;
+		background: transparent;
+		width: 100%;
+		padding: 10px 5px;
+		font-size: 14px;
+		letter-spacing: 0.3px;
+		display: flex;
+		gap: 5px;
+		cursor: pointer;
+
+		:hover {
+			background: rgba(0, 0, 0, 0.1);
+		}
+
+		svg {
+			font-size: 15px;
+		}
+	}
 `;
