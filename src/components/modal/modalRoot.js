@@ -8,6 +8,10 @@ const ModalRoot = (props) => {
 	const refresh = () => {
 		props.refreshCards();
 	};
+	const refreshData = () => {
+		props.refreshData();
+	};
+	const refreshEngines = () => props.refreshEngines();
 
 	useEffect(() => {
 		ModalService.on("open", ({ component, props }) => {
@@ -25,7 +29,16 @@ const ModalRoot = (props) => {
 
 	return (
 		<ModalSection isRoot={modal.component}>
-			{ModalComponent && <ModalComponent {...modal.props} close={modal.close} refreshCards={refresh} style={{ display: "block" }} />}
+			{ModalComponent && (
+				<ModalComponent
+					{...modal.props}
+					close={modal.close}
+					refreshCards={refresh}
+					refreshData={refreshData}
+					refreshEngines={refreshEngines}
+					style={{ display: "block" }}
+				/>
+			)}
 		</ModalSection>
 	);
 };

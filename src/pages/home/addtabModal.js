@@ -8,9 +8,6 @@ import { ModalButton, ModalContainer, ModalInput, ModalLabel } from "../../style
 const AddtabModal = (props) => {
 	const form = useRef("");
 
-	// if (JSON.parse(localStorage.getItem("cardnames") == null)) localStorage.setItem("cardnames", []);
-	// if (JSON.parse(localStorage.getItem("cardnames") == null)) localStorage.setItem("cardurls", []);
-
 	const saveCard = () => {
 		let cardname = form.current.name.value;
 		let cardurl = form.current.url.value;

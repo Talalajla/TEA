@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { Card, CardEdit, CardFavicon, CardImg, CardLink, CardMenu, CardsWrapper, MenuWrapper } from "../../../styles/home/main";
 import { AiOutlinePlus, AiTwotoneEdit } from "react-icons/ai";
 import { BsThreeDots, BsTrashFill } from "react-icons/bs";
@@ -22,7 +22,6 @@ const Cards = (props) => {
 		const element = document.querySelector(".selected").querySelectorAll("a div");
 		const name = element[1].textContent;
 		const url = element[0].dataset.url;
-		console.log(name, url);
 
 		const cardNames = JSON.parse(localStorage.getItem("cardnames"));
 		const cardUrls = JSON.parse(localStorage.getItem("cardurls"));
@@ -51,11 +50,11 @@ const Cards = (props) => {
 	return (
 		<CardsWrapper>
 			{cardsNames.map((item, index) => (
-				<Card key={index} target="_blank" className="card">
+				<Card key={index} className="card">
 					<CardEdit onClick={relocateDialog}>
 						<BsThreeDots />
 					</CardEdit>
-					<CardLink href={`https://${cardsUrls[index]}`}>
+					<CardLink href={`https://${cardsUrls[index]}`} target="_blank">
 						<CardFavicon data-url={cardsUrls[index]}>
 							<CardImg src={`https://www.google.com/s2/favicons?domain=${cardsUrls[index]}&sz=128`} />
 						</CardFavicon>

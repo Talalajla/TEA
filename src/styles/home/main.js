@@ -34,6 +34,7 @@ export const MainBackground = styled.div`
 	height: 100%;
 	z-index: 1;
 	overflow: hidden;
+	background: #000;
 `;
 
 export const Content = styled.div`
@@ -104,6 +105,13 @@ export const MenuMoreWeatherInfo = styled.div`
 			opacity: 1;
 			transform: translateY(100%);
 		`}
+
+	${({ alerts }) =>
+		alerts &&
+		css`
+			min-width: 400px;
+			max-width: 400px;
+		`}
 `;
 
 export const MenuRow = styled.div`
@@ -128,10 +136,22 @@ export const MenuRow = styled.div`
 				cursor: pointer;
 			}
 		`}
+	${({ title, theme }) =>
+		title &
+		css`
+			font-size: 20px;
+			border-bottom: 1px solid ${theme.background2};
+		`}
 
 	div {
 		white-space: nowrap;
 	}
+`;
+
+export const MenuTitle = styled.div`
+	font-size: 18px;
+	border-bottom: 1px solid ${({ theme }) => theme.background2};
+	padding: 15px 20px;
 `;
 
 export const MenuHr = styled.hr`
@@ -228,6 +248,17 @@ export const FunctionBox = styled.div`
 	background: ${({ theme }) => theme.background};
 	border-radius: ${({ corner }) => (corner ? "0 25px 25px 0" : null)};
 	padding: ${({ corner }) => (corner ? "0 15px" : "0 0 0 15px")};
+	cursor: pointer;
+
+	${({ engine }) =>
+		engine &&
+		css`
+			color: ${() => {
+				if (engine === "bing") return "#0C8484";
+				else if (engine === "yahoo") return "#410093";
+				else if (engine === "duckduckgo") return "#F05435";
+			}};
+		`}
 
 	input[type="submit"] {
 		display: none;
@@ -380,4 +411,110 @@ export const MenuWrapper = styled.div`
 			font-size: 15px;
 		}
 	}
+`;
+
+export const CityList = styled.ul`
+	margin: 0;
+	padding: 0;
+	display: flex;
+	flex-direction: column;
+	gap: 3px;
+	list-style: none;
+`;
+
+export const CityListItem = styled.li`
+	color: ${({ theme }) => theme.text};
+`;
+
+export const CityItemLabel = styled.label`
+	cursor: pointer;
+`;
+export const CityHiddenRadio = styled.input.attrs({ type: "radio" })`
+	display: none;
+
+	:checked + div {
+		background: ${({ theme }) => theme.blue2};
+		color: ${({ theme }) => theme.white};
+	}
+`;
+export const CityItemStyle = styled.div`
+	display: flex;
+	padding: 5px 10px;
+	background: ${({ theme }) => theme.background};
+	border-radius: 10px;
+	user-select: none;
+	:hover {
+		background: ${({ theme }) => theme.background2};
+	}
+`;
+export const CityItemInfo = styled.div`
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	flex: 1;
+	font-size: 12px;
+
+	> span:first-of-type {
+		font-size: 15px;
+	}
+	> div {
+		font-size: 12px;
+	}
+	:last-of-type {
+		max-width: 125px;
+		align-items: flex-end;
+		span {
+			font-size: 12px;
+		}
+		div {
+			align-items: flex-end;
+		}
+	}
+`;
+export const SearchCitiesBtn = styled.div`
+	color: ${({ theme }) => theme.white};
+	background: ${({ theme }) => theme.blue2};
+	border-radius: 0 10px 10px 0;
+	cursor: pointer;
+	width: 50px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	padding: 15px 0;
+`;
+
+export const AlertBox = styled.div`
+	padding-left: 10px;
+	font-size: 20px;
+	height: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+
+	svg {
+		color: red;
+	}
+`;
+export const AlertRow = styled.div`
+	display: flex;
+	flex-direction: column;
+	font-size: 12px;
+	padding: 15px 20px;
+`;
+export const AlertTop = styled.div`
+	display: grid;
+	grid-template-columns: 1fr 65px;
+	padding-bottom: 10px;
+`;
+export const AlertTitle = styled.div`
+	font-weight: 500;
+`;
+export const AlertDesc = styled.div`
+	text-align: justify;
+	letter-spacing: 0.3px;
+`;
+export const AlertTimes = styled.div``;
+export const AlertSource = styled.div`
+	font-size: 10px;
+	padding-top: 5px;
 `;

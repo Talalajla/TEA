@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import Images from "../pages/home/lapse/imgs";
 import { MainBackground, Wrapper } from "../styles/home/main";
@@ -13,30 +13,36 @@ const CurrentImage = styled.div`
 		res.map((item) => (+item[0] === nr ? (src = item[1]) : null));
 		return `url(${src})`;
 	}};
+	transition: opacity 0.5s;
 `;
 
 const Background = (props) => {
 	const [hour, setHour] = useState(null);
+	const imgRef = useRef();
 
 	useEffect(() => {
-		const figureTimeThings = () => {
-			console.log("test");
+		if (!hour) return;
+		const hourNow = new Date().getHours();
+		setHour(hourNow);
+	}, [hour]);
+
+	useEffect(() => {
+		const interval = setInterval(async () => {
 			const hourNow = new Date().getHours();
 			if (hour !== hourNow) {
-				setHour(hourNow);
+				setTimeout(() => (imgRef.current.style.opacity = 0), 0);
+				setTimeout(() => setHour(hourNow), 450);
+				setTimeout(() => (imgRef.current.style.opacity = 1), 500);
 			}
-		};
-
-		figureTimeThings();
-		setInterval(() => figureTimeThings(), 1000);
-		return () => clearInterval(figureTimeThings);
+		}, 1000);
+		return () => clearInterval(interval);
 	}, [hour]);
 
 	return (
 		<>
 			<Wrapper>{props.children}</Wrapper>
 			<MainBackground>
-				<CurrentImage nr={hour} />
+				<CurrentImage ref={imgRef} nr={hour} />
 			</MainBackground>
 		</>
 	);

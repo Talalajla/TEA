@@ -13,7 +13,6 @@ const EdittabModal = (props) => {
 
 	useEffect(() => {
 		const element = document.querySelector(".selected").querySelectorAll("a div");
-		console.log(element);
 		setCurrentname(element[1].textContent);
 		setCurrenturl(element[0].dataset.url);
 	}, []);
@@ -32,8 +31,6 @@ const EdittabModal = (props) => {
 
 		cardNames.forEach((name, index) => (name === currentname ? (cardNames[index] = newname) : null));
 		cardUrls.forEach((url, index) => (url === currenturl ? (cardUrls[index] = newurl) : null));
-
-		console.log(cardNames);
 
 		localStorage.setItem("cardnames", JSON.stringify(cardNames));
 		localStorage.setItem("cardurls", JSON.stringify(cardUrls));

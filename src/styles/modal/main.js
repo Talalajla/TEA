@@ -62,32 +62,75 @@ export const ModalButton = styled.div`
 	${({ final }) =>
 		final &&
 		css`
-			background: #0373fc;
-			border: 1px solid #0373fc;
+			background: ${({ theme }) => theme.blue1};
+			border: 1px solid ${({ theme }) => theme.blue1};
 			color: #fefefe;
 			transition: background 0.2s;
 
 			:hover {
-				background: #308dff;
+				background: ${({ theme }) => theme.blue2};
 			}
 		`}
 `;
 
 export const ModalContainer = styled.div`
 	flex: 1;
-
 	${({ flex }) =>
 		flex &&
 		css`
 			display: flex;
 			flex-direction: ${({ col }) => (col ? "column" : "row")};
-		`}
+			gap: ${({ gap }) => (gap ? `${gap}px` : null)};
+			justify-content: ${({ jccenter }) => (jccenter ? "center" : "flex-start")};
+			align-items: ${({ aicenter }) => (aicenter ? "center" : "flex-start")};
+		`};
+	font-size: ${({ fz }) => (fz ? `${fz}px` : "16px")};
 `;
 
 export const ModalLabel = styled.label`
+	cursor: ${({ cp }) => (cp ? "pointer" : "default")};
+
 	:not(:first-of-type) {
 		margin-top: 10px;
 	}
+
+	${({ type }) =>
+		type &&
+		css`
+			svg:last-of-type {
+				display: ${({ type }) => (type === "google" ? "none" : "")};
+			}
+
+			input:checked ~ svg {
+				:first-of-type {
+					display: ${({ type }) => (type === "google" ? "none" : "")};
+				}
+				:last-of-type {
+					display: ${({ type }) => (type === "google" ? "block" : "")};
+				}
+
+				color: ${() => {
+					if (type === "bing") return "#0C8484";
+					else if (type === "yahoo") return "#410093";
+					else if (type === "duck") return "#F05435";
+				}};
+			}
+
+			:hover {
+				svg:first-of-type {
+					display: ${({ type }) => (type === "google" ? "none" : "")};
+				}
+				svg:last-of-type {
+					display: ${({ type }) => (type === "google" ? "block" : "")};
+				}
+
+				color: ${() => {
+					if (type === "bing") return "#0C8484";
+					else if (type === "yahoo") return "#410093";
+					else if (type === "duck") return "#F05435";
+				}};
+			}
+		`}
 `;
 export const ModalInput = styled.input`
 	background: ${({ theme }) => theme.background2};
@@ -96,4 +139,33 @@ export const ModalInput = styled.input`
 	color: ${({ theme }) => theme.text2};
 	font-size: 15px;
 	letter-spacing: 0.7px;
+	${({ flexfull }) =>
+		flexfull &&
+		css`
+			flex: 1;
+			border-radius: 10px 0 0 10px;
+
+			:focus + div,
+			:focus-visible + div {
+				outline: 2px solid ${({ theme }) => theme.blue2};
+			}
+		`}
+`;
+
+export const ModalRow = styled.div`
+	display: flex;
+	padding: 5px 0;
+`;
+
+export const DefaultRadio = styled.input.attrs({ type: "radio" })`
+	display: none;
+
+	${({ temp }) =>
+		temp &&
+		css`
+			:checked + div {
+				background: ${({ theme }) => theme.blue2};
+				color: #efefef;
+			}
+		`}
 `;

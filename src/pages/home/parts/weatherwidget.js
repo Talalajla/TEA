@@ -1,16 +1,16 @@
 import React, { useRef } from "react";
 // More Menu Icons
+import cloud from "../../../files/home/cloud.png";
+import humidity from "../../../files/home/humidity.png";
+import rain from "../../../files/home/water.png";
 import sunriseIco from "../../../files/home/sunrise.png";
 import sunsetIco from "../../../files/home/sunset.png";
+import snow from "../../../files/home/snowflake.png";
 import termo1 from "../../../files/home/termo1.png";
 import termo2 from "../../../files/home/termo2.png";
-import rain from "../../../files/home/water.png";
-import cloud from "../../../files/home/cloud.png";
-import snow from "../../../files/home/snowflake.png";
-import humidity from "../../../files/home/humidity.png";
+import uvi from "../../../files/home/uv.png";
 import wind from "../../../files/home/wind.png";
 import winddir from "../../../files/home/winddir.png";
-import { MdKeyboardArrowUp, MdKeyboardArrowDown } from "react-icons/md";
 import { MenuHr, MenuIcon, MenuMoreWeatherInfo, MenuRow, MenuRowData, MenuRowDesc, WeatherIconCircle } from "../../../styles/home/main";
 import { useClickAway } from "react-use";
 
@@ -18,6 +18,10 @@ export default function WeatherWidget(props) {
 	const menuRef = useRef("");
 
 	const data = props.data;
+	let symbolUnit;
+	if (props.unit === "metric") symbolUnit = "°C";
+	else if (props.unit === "imperial") symbolUnit = "°F";
+	else if (props.unit === "default") symbolUnit = "°K";
 
 	useClickAway(
 		menuRef,
@@ -32,10 +36,10 @@ export default function WeatherWidget(props) {
 			<img src={props.icon} alt="weather icon" onClick={() => props.toggleMenu()} />
 			<MenuMoreWeatherInfo show={props.menu}>
 				<MenuRow space>
-					<MenuRowData>{data.name}</MenuRowData>
-					<MenuRowData>{data.sys.country}</MenuRowData>
+					<MenuRowData>{props.cityname}</MenuRowData>
+					<MenuRowData>{props.country}</MenuRowData>
 				</MenuRow>
-				<MenuRow>{data.weather[0].description}</MenuRow>
+				<MenuRow>{data.current.weather[0].description}</MenuRow>
 				<MenuHr />
 				<MenuRow>Wschód i zachód słońca</MenuRow>
 				<MenuRow>
@@ -54,63 +58,38 @@ export default function WeatherWidget(props) {
 					<MenuRowDesc>
 						<MenuIcon title="temperatura" src={termo1}></MenuIcon>
 						<MenuRowData>
-							{data.main.temp} {props.unit}
+							{data.current.temp} {symbolUnit}
 						</MenuRowData>
 					</MenuRowDesc>
 					<MenuRowDesc>
 						<MenuIcon title="temperatura odczuwalna" src={termo2}></MenuIcon>
 						<MenuRowData>
-							{data.main.feels_like} {props.unit}
+							{data.current.feels_like} {symbolUnit}
 						</MenuRowData>
 					</MenuRowDesc>
 				</MenuRow>
-				<MenuRow>
-					<MenuRowDesc col="green">
-						<MdKeyboardArrowUp title="temperatura minimalna" />
-						<MenuRowData>
-							{data.main.temp_min} {props.unit}
-						</MenuRowData>
-					</MenuRowDesc>
-					<MenuRowDesc col="red">
-						<MdKeyboardArrowDown title="temperatura maksymalna" />
-						<MenuRowData>
-							{data.main.temp_max} {props.unit}
-						</MenuRowData>
-					</MenuRowDesc>
-				</MenuRow>
-				{data.snow && (
+
+				{data.current.snow && (
 					<>
 						<MenuHr />
 						<MenuRow>Opady śniegu</MenuRow>
 						<MenuRow>
 							<MenuRowDesc>
 								<MenuIcon title="wysokość opadów śniegu, ostatnia godzina" src={snow} />
-								<MenuRowData>{data.snow["1h"]}mm</MenuRowData>
+								<MenuRowData>{data.current.snow["1h"]}mm</MenuRowData>
 							</MenuRowDesc>
-							{data.snow["3h"] && (
-								<MenuRowDesc>
-									<MenuIcon title="wysokość opadów śniegu, ostatnie 3 godziny" src={snow} />
-									<MenuRowData>{data.snow["3h"]}mm</MenuRowData>
-								</MenuRowDesc>
-							)}
 						</MenuRow>
 					</>
 				)}
-				{data.rain && (
+				{data.current.rain && (
 					<>
 						<MenuHr />
 						<MenuRow>Opady deszczu</MenuRow>
 						<MenuRow>
 							<MenuRowDesc>
 								<MenuIcon title="wysokość opadów deszczu, ostatnia godzina" src={rain} />
-								<MenuRowData>{data.rain["1h"]} mm</MenuRowData>
+								<MenuRowData>{data.current.rain["1h"]} mm</MenuRowData>
 							</MenuRowDesc>
-							{data.rain["3h"] && (
-								<MenuRowDesc>
-									<MenuIcon title="wysokość opadów deszczu, ostatnie 3 godziny" src={rain} />
-									<MenuRowData>{data.rain["3h"]} mm</MenuRowData>
-								</MenuRowDesc>
-							)}
 						</MenuRow>
 					</>
 				)}
@@ -120,30 +99,47 @@ export default function WeatherWidget(props) {
 				<MenuRow>
 					<MenuRowDesc>
 						<MenuIcon title="procent zachmurzenia" src={cloud} />
-						<MenuRowData>{data.clouds.all}%</MenuRowData>
+						<MenuRowData>{data.current.clouds}%</MenuRowData>
 					</MenuRowDesc>
 					<MenuRowDesc>
 						<MenuIcon title="prędkość wiatru" src={wind} />
-						<MenuRowData>{data.wind.speed} m/s</MenuRowData>
+						<MenuRowData>{data.current.wind_speed} m/s</MenuRowData>
 					</MenuRowDesc>
 				</MenuRow>
 				<MenuRow>
 					<MenuRowDesc>
 						<MenuIcon title="wilgotność powietrza" src={humidity} />
-						<MenuRowData>{data.main.humidity}%</MenuRowData>
+						<MenuRowData>{data.current.humidity}%</MenuRowData>
 					</MenuRowDesc>
 					<MenuRowDesc>
 						<MenuIcon title="kierunek wiatru" src={winddir} />
 						<MenuRowData>{props.windDir}</MenuRowData>
 					</MenuRowDesc>
 				</MenuRow>
-				<MenuHr />
 				<MenuRow>
-					<MenuRowDesc>Dane z godz.</MenuRowDesc>
-					<MenuRowDesc flexend>
-						{new Date(data.dt * 1000).getHours() < 10 ? "0" : ""}
-						{new Date(data.dt * 1000).getHours()}:{new Date(data.dt * 1000).getMinutes() < 10 ? "0" : ""}
-						{new Date(data.dt * 1000).getMinutes()}
+					<MenuRowDesc>
+						<MenuIcon title="uv index" src={uvi} />
+						<MenuRowData>{data.current.uvi}</MenuRowData>
+					</MenuRowDesc>
+					<MenuRowDesc></MenuRowDesc>
+				</MenuRow>
+				<MenuRow>
+					<MenuRowDesc>
+						<MenuIcon title="visibility" src={uvi} />
+						<MenuRowData>{data.current.visibility}</MenuRowData>
+					</MenuRowDesc>
+					<MenuRowDesc></MenuRowDesc>
+				</MenuRow>
+				<MenuHr />
+				<MenuRow>Coords:</MenuRow>
+				<MenuRow>
+					<MenuRowDesc>
+						<MenuRowData>Lat: </MenuRowData>
+						<MenuRowData>{Math.round(data.lat * 100) / 100}°</MenuRowData>
+					</MenuRowDesc>
+					<MenuRowDesc>
+						<MenuRowData>Lon: </MenuRowData>
+						<MenuRowData>{Math.round(data.lon * 100) / 100}°</MenuRowData>
 					</MenuRowDesc>
 				</MenuRow>
 			</MenuMoreWeatherInfo>
