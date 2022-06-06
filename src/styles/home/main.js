@@ -2,51 +2,74 @@ import styled from "styled-components";
 import { css } from "styled-components";
 
 export const Menu = styled.div`
-	position: absolute;
-	left: 30px;
-	top: 30px;
+	padding: 30px;
+	padding-bottom: 0;
 	z-index: 2;
 	font-size: 25px;
 	display: flex;
 	align-items: center;
 	color: ${({ theme }) => theme.white};
 	z-index: 20;
+	position: relative;
 
 	svg {
 		cursor: pointer;
 		color: #fff;
 	}
+
+	@media (max-width: 500px) {
+		> div:first-of-type {
+			width: 45px;
+			height: 45px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		}
+	}
 `;
 
 export const Wrapper = styled.div`
-	background: ${({ theme }) => theme.background};
+	background: transparent;
 	height: 100%;
 	display: flex;
-	justify-content: center;
-	align-items: center;
+	flex-direction: column;
 	position: relative;
+	overflow-y: auto;
+	overflow-x: hidden;
+	z-index: 2;
 `;
 
 export const MainBackground = styled.div`
 	position: absolute;
 	top: 0;
-	width: 100%;
-	height: 100%;
+	width: 100vw;
+	height: 100vh;
 	z-index: 1;
 	overflow: hidden;
 	background: #000;
+	z-index: 1;
 `;
 
 export const Content = styled.div`
 	z-index: 2;
+	max-width: 1000px;
+	/* min-height: calc(100vh - 255px); */
+	margin: 0 auto;
+	margin-top: 150px;
 	display: flex;
 	flex-direction: column;
-	justify-content: center;
 	align-content: center;
 	color: ${({ theme }) => theme.text};
+	margin-bottom: 150px;
+
 	@media (max-width: 800px) {
 		width: 100%;
 		padding: 0 30px;
+		margin-top: 30px;
+	}
+
+	@media (max-width: 500px) {
+		margin-top: 0;
 	}
 `;
 
@@ -76,6 +99,25 @@ export const WeatherIconCircle = styled.div`
 	img {
 		max-width: 40px;
 	}
+	@media (max-width: 500px) {
+		margin-left: 0;
+		width: 35px;
+		height: 35px;
+		margin-right: 3px;
+		img {
+			max-width: 35px;
+		}
+		display: none;
+	}
+	${({ mobile }) =>
+		mobile &&
+		css`
+			display: none;
+
+			@media (max-width: 500px) {
+				display: flex;
+			}
+		`}
 `;
 
 export const MenuMoreWeatherInfo = styled.div`
@@ -87,7 +129,7 @@ export const MenuMoreWeatherInfo = styled.div`
 	min-width: 250px;
 	max-width: 300px;
 	border-radius: 15px;
-	transform: translateY(130%);
+	transform: translateY(110%);
 	background: ${({ theme }) => theme.background};
 	color: ${({ theme }) => theme.text};
 	display: flex;
@@ -103,7 +145,7 @@ export const MenuMoreWeatherInfo = styled.div`
 		css`
 			visibility: visible;
 			opacity: 1;
-			transform: translateY(100%);
+			transform: translateY(calc(100% + 10px));
 		`}
 
 	${({ alerts }) =>
@@ -111,6 +153,17 @@ export const MenuMoreWeatherInfo = styled.div`
 		css`
 			min-width: 400px;
 			max-width: 400px;
+		`}
+	@media (max-width: 500px) {
+		width: calc(100vw - 60px);
+		min-width: unset;
+	}
+	${({ widget }) =>
+		widget &&
+		css`
+			@media (max-height: 600px) {
+				max-width: unset;
+			}
 		`}
 `;
 
@@ -120,7 +173,7 @@ export const MenuRow = styled.div`
 	align-items: center;
 	gap: 10px;
 	justify-content: ${({ space }) => (space ? "space-between" : null)};
-	font-size: ${({ space }) => (space ? "18px" : "15px")};
+	font-size: ${({ bigfz }) => (bigfz ? "18px" : "15px")};
 	padding: ${({ padd }) => (padd ? "15px" : "0")};
 
 	svg {
@@ -146,6 +199,12 @@ export const MenuRow = styled.div`
 	div {
 		white-space: nowrap;
 	}
+	${({ mobile }) =>
+		mobile &&
+		css`
+			display: none;
+			@media (max-width: 500px);
+		`}
 `;
 
 export const MenuTitle = styled.div`
@@ -169,8 +228,10 @@ export const MenuRowDesc = styled.div`
 	align-items: center;
 	gap: 5px;
 	flex: 1;
-	max-width: 50%;
+	max-width: ${({ fullWidth }) => (fullWidth ? "100%" : "50%")};
 	justify-content: ${({ flexend }) => (flexend ? "flex-end" : "flex-start")};
+	position: relative;
+	min-width: 100px;
 
 	${({ col }) =>
 		col &&
@@ -184,11 +245,33 @@ export const MenuRowDesc = styled.div`
 			}
 		`}
 
+	${({ mobile }) =>
+		mobile &&
+		css`
+			min-width: unset;
+			width: 85px;
+			flex: unset;
+		`}
+
 	svg {
 		font-size: 23px;
 	}
+
+	@media (max-width: 500px) {
+		max-width: 100%;
+	}
 `;
-export const MenuRowData = styled.div``;
+export const MenuRowData = styled.div`
+	${({ mobile }) =>
+		mobile &&
+		css`
+			display: none;
+
+			@media (max-height: 600px) {
+				display: block;
+			}
+		`}
+`;
 
 export const MenuIcon = styled.img`
 	width: 23px;
@@ -198,6 +281,65 @@ export const MenuIcon = styled.img`
 export const WeatherMenuInfo = styled.div`
 	font-size: 20px;
 	padding: 0 5px;
+
+	@media (max-width: 500px) {
+		font-size: 14px;
+	}
+`;
+
+export const UVHelp = styled.div`
+	height: 19px;
+	width: 19px;
+	background: ${({ theme }) => theme.background2};
+	color: ${({ theme }) => theme.text};
+	border: 1px solid ${({ theme }) => theme.text};
+	display: grid;
+	place-items: center;
+	border-radius: 50%;
+	position: absolute;
+	right: 0;
+	font-size: 12px;
+	:hover {
+		cursor: help;
+		+ div {
+			display: flex;
+		}
+	}
+	@media (max-width: 500px) {
+		right: auto;
+		left: 50px;
+	}
+`;
+
+export const UVHelpBox = styled.div`
+	position: absolute;
+	padding: 20px;
+	background: #fff;
+	right: 0;
+	bottom: 0;
+	transform: translate(-10%, -10%);
+	background: ${({ theme }) => theme.background};
+	border: 1px solid ${({ theme }) => theme.background2};
+	color: ${({ theme }) => theme.text};
+	border-radius: 10px;
+	display: ${({ show }) => (show ? "flex" : "none")};
+	flex-direction: column;
+	gap: 5px;
+	max-width: 300px;
+`;
+
+export const UVColor = styled.div`
+	padding: 5px 10px;
+	text-align: center;
+	color: #fff;
+	text-shadow: 0 0 2px black;
+	background: ${({ col }) => (col ? `${col}` : null)};
+	width: 50px;
+	white-space: nowrap;
+
+	+ span {
+		white-space: nowrap;
+	}
 `;
 
 // ? Content
@@ -207,6 +349,7 @@ export const Greetings = styled.div`
 	color: #eee;
 	display: flex;
 	justify-content: space-between;
+	align-items: center;
 	font-size: 20px;
 
 	code {
@@ -214,11 +357,13 @@ export const Greetings = styled.div`
 	}
 
 	@media (max-width: 800px) {
-		font-size: 20px;
+		font-size: 16px;
 	}
 `;
 
-export const SearchForm = styled.form``;
+export const SearchForm = styled.form`
+	width: 100%;
+`;
 export const SearchBox = styled.label`
 	position: relative;
 	width: 650px;
@@ -238,6 +383,8 @@ export const UrlInput = styled.input`
 	font-size: 16px;
 	color: ${({ theme }) => theme.text};
 	background: ${({ theme }) => theme.background};
+	transition: background 0.1s ease-in-out, text 0.1s;
+	width: 100%;
 `;
 export const FunctionBox = styled.div`
 	height: 44px;
@@ -249,6 +396,7 @@ export const FunctionBox = styled.div`
 	border-radius: ${({ corner }) => (corner ? "0 25px 25px 0" : null)};
 	padding: ${({ corner }) => (corner ? "0 15px" : "0 0 0 15px")};
 	cursor: pointer;
+	transition: background 0.1s ease-in-out, text 0.1s;
 
 	${({ engine }) =>
 		engine &&
@@ -290,6 +438,7 @@ export const Card = styled.div`
 			display: flex;
 			flex-direction: column;
 			align-items: center;
+			justify-content: space-between;
 			gap: 5px;
 			cursor: pointer;
 			text-shadow: 0 0 3px black;
@@ -301,12 +450,18 @@ export const Card = styled.div`
 	:hover a > div {
 		opacity: 1;
 	}
+
+	@media (max-width: 600px) {
+		width: 75px;
+		min-height: 80px;
+	}
 `;
 
 export const CardLink = styled.a`
 	display: flex;
 	flex-direction: column;
 	align-items: center;
+	justify-content: space-between;
 	cursor: pointer;
 	gap: 8px;
 	color: #dcdfe3;
@@ -350,11 +505,21 @@ export const CardFavicon = styled.div`
 			color: #121212;
 			margin-top: 20px;
 		`}
+	@media (max-width: 600px) {
+		width: 45px;
+		height: 45px;
+		svg {
+			font-size: 15px;
+		}
+	}
 `;
 
 export const CardImg = styled.img`
 	width: 32px;
 	border-radius: 50%;
+	@media (max-width: 600px) {
+		width: 20px;
+	}
 `;
 
 export const CardEdit = styled.div`
@@ -420,6 +585,7 @@ export const CityList = styled.ul`
 	flex-direction: column;
 	gap: 3px;
 	list-style: none;
+	width: 100%;
 `;
 
 export const CityListItem = styled.li`

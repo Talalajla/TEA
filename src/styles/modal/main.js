@@ -24,6 +24,14 @@ export const ModalBox = styled.div`
 	padding: 20px;
 	border-radius: 10px;
 	min-width: 400px;
+	overflow: auto;
+	max-height: 95%;
+	margin: auto;
+	position: relative;
+	@media (max-width: 500px) {
+		min-width: unset;
+		width: 95%;
+	}
 `;
 export const ModalHeader = styled.div`
 	text-align: center;
@@ -74,8 +82,10 @@ export const ModalButton = styled.div`
 `;
 
 export const ModalContainer = styled.div`
-	flex: 1;
-	${({ flex }) =>
+	width: 100%;
+	height: ${({ fullh }) => (fullh ? "100%" : "auto")};
+
+	${({ flex, mobileSwap }) =>
 		flex &&
 		css`
 			display: flex;
@@ -83,8 +93,18 @@ export const ModalContainer = styled.div`
 			gap: ${({ gap }) => (gap ? `${gap}px` : null)};
 			justify-content: ${({ jccenter }) => (jccenter ? "center" : "flex-start")};
 			align-items: ${({ aicenter }) => (aicenter ? "center" : "flex-start")};
+			${mobileSwap &&
+			css`
+				@media (max-height: 600px) {
+					flex-direction: row;
+					gap: 10px;
+				}
+			`}
 		`};
 	font-size: ${({ fz }) => (fz ? `${fz}px` : "16px")};
+	@media (max-height: 600px) {
+		display: ${({ notmobile }) => (notmobile ? "none" : null)};
+	}
 `;
 
 export const ModalLabel = styled.label`
@@ -139,6 +159,7 @@ export const ModalInput = styled.input`
 	color: ${({ theme }) => theme.text2};
 	font-size: 15px;
 	letter-spacing: 0.7px;
+	height: 100%;
 	${({ flexfull }) =>
 		flexfull &&
 		css`
@@ -155,6 +176,7 @@ export const ModalInput = styled.input`
 export const ModalRow = styled.div`
 	display: flex;
 	padding: 5px 0;
+	width: 100%;
 `;
 
 export const DefaultRadio = styled.input.attrs({ type: "radio" })`
@@ -168,4 +190,26 @@ export const DefaultRadio = styled.input.attrs({ type: "radio" })`
 				color: #efefef;
 			}
 		`}
+`;
+
+export const ModalCardContainer = styled.div`
+	width: 100%;
+	padding: 0 20px;
+	display: flex;
+	flex-direction: column;
+	gap: 5px;
+
+	${({ footer }) =>
+		footer &&
+		css`
+			flex-direction: row;
+			justify-content: flex-end;
+		`}
+`;
+export const CornerClose = styled.div`
+	position: absolute;
+	right: 15px;
+	top: 10px;
+	font-size: 30px;
+	color: ${({ theme }) => theme.text};
 `;

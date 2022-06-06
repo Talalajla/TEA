@@ -20,7 +20,7 @@ const App = () => {
 			<Toggle theme={theme} toggleTheme={toggleTheme} onClick={toggleTheme} dark={theme === "light"} />
 			<BrowserRouter>
 				<Routes>
-					<Route index path="/" element={<Home />} />
+					<Route index path="/" element={<Home toggleDM={toggleTheme} />} />
 					<Route path="/weather" element={<Weather />} />
 				</Routes>
 			</BrowserRouter>

@@ -3,7 +3,7 @@ import Modal from "../../components/modal/modal";
 import ModalPartHeader from "../../components/modal/modalHeader";
 import ModalPartBody from "../../components/modal/modalBody";
 import ModalPartFooter from "../../components/modal/modalFooter";
-import { ModalButton, ModalContainer, ModalInput, ModalLabel } from "../../styles/modal/main";
+import { ModalButton, ModalCardContainer, ModalContainer, ModalInput, ModalLabel } from "../../styles/modal/main";
 
 const EdittabModal = (props) => {
 	const form = useRef("");
@@ -43,19 +43,23 @@ const EdittabModal = (props) => {
 			<ModalPartHeader>Edit shortcut card</ModalPartHeader>
 			<ModalPartBody>
 				<ModalContainer flex col as="form" ref={form}>
-					<ModalLabel htmlFor="name">Your name</ModalLabel>
-					<ModalInput name="name" defaultValue={currentname} />
-					<ModalLabel htmlFor="url">Website URL</ModalLabel>
-					<ModalInput name="url" defaultValue={currenturl} />
+					<ModalCardContainer>
+						<ModalLabel htmlFor="name">Your name</ModalLabel>
+						<ModalInput name="name" defaultValue={currentname} />
+						<ModalLabel htmlFor="url">Website URL</ModalLabel>
+						<ModalInput name="url" defaultValue={currenturl} />
+					</ModalCardContainer>
 				</ModalContainer>
 			</ModalPartBody>
 			<ModalPartFooter>
-				<ModalButton onClick={props.close} hov>
-					Cancel
-				</ModalButton>
-				<ModalButton onClick={editCard} final>
-					Save
-				</ModalButton>
+				<ModalCardContainer footer>
+					<ModalButton onClick={props.close} hov>
+						Cancel
+					</ModalButton>
+					<ModalButton onClick={editCard} final>
+						Save
+					</ModalButton>
+				</ModalCardContainer>
 			</ModalPartFooter>
 		</Modal>
 	);

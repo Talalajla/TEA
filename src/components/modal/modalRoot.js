@@ -37,6 +37,8 @@ const ModalRoot = (props) => {
 					refreshData={refreshData}
 					refreshEngines={refreshEngines}
 					style={{ display: "block" }}
+					data={props.data}
+					wd={props.wdir}
 				/>
 			)}
 		</ModalSection>

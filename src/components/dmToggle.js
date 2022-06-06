@@ -45,6 +45,10 @@ const Button = styled.div`
 				}
 			}
 		`}
+
+	@media (max-width: 500px) {
+		display: none;
+	}
 `;
 
 const Toggle = ({ theme, toggleTheme, dark }) => {

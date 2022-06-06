@@ -55,8 +55,13 @@ const CityModal = (props) => {
 	const overrideCity = () => {
 		const listItems = formCities.current.cityRadio;
 		let checkedIndex;
-		listItems.forEach((item, index) => (item.checked ? (checkedIndex = index) : null));
-		setNewcity(cityarray[checkedIndex]);
+		if (listItems.length >= 2) {
+			listItems.forEach((item, index) => (item.checked ? (checkedIndex = index) : null));
+			setNewcity(cityarray[checkedIndex]);
+			console.log(cityarray[checkedIndex]);
+		} else {
+			setNewcity(cityarray[0]);
+		}
 	};
 
 	return (
@@ -77,7 +82,7 @@ const CityModal = (props) => {
 							</ModalContainer>
 						</ModalRow>
 						<ModalLabel htmlFor="city">Find your city:</ModalLabel>
-						<ModalContainer flex>
+						<ModalContainer fullh flex>
 							<ModalInput flexfull name="city" />
 							<SearchCitiesBtn onClick={searchCities}>
 								<AiOutlineSearch />

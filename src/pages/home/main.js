@@ -40,11 +40,13 @@ import AddtabModal from "./addtabModal";
 import EdittabModal from "./edittabModal";
 import CityModal from "./cityModal";
 import ConfigModal from "./configModal";
+import WidgetMobile from "./mobileWidget";
+
 import Cards from "./parts/cards";
 import Background from "../../layout/background";
 import { ModalContainer } from "../../styles/modal/main";
 
-const Home = () => {
+const Home = (props) => {
 	const [lat, setLat] = useState(null);
 	const [lon, setLon] = useState(null);
 	const [cityname, setCityName] = useState(null);
@@ -109,8 +111,6 @@ const Home = () => {
 		if (status === "idle") fetchData();
 	}, [status, lat, lon, cityname, country, unit]);
 
-	console.log(data);
-
 	useEffect(() => {
 		const interval = setInterval(async () => {
 			setStatus("Updating");
@@ -150,14 +150,14 @@ const Home = () => {
 		setSunset(sunsetTime);
 
 		const degrees = data.current.wind_deg;
-		if (degrees < 22.5 || degrees >= 337.5) setWindDir("płn.");
-		else if (degrees >= 22.5 && degrees < 67.5) setWindDir("płn. wsch.");
-		else if (degrees >= 67.5 && degrees < 112.5) setWindDir("wsch.");
-		else if (degrees >= 112.5 && degrees < 157.5) setWindDir("płd. wsch.");
-		else if (degrees >= 157.5 && degrees < 202.5) setWindDir("płd.");
-		else if (degrees >= 202.5 && degrees < 247.5) setWindDir("płd. zach.");
-		else if (degrees >= 247.5 && degrees < 292.5) setWindDir("zach.");
-		else if (degrees >= 292.5 && degrees < 337.5) setWindDir("płn. zach.");
+		if (degrees < 22.5 || degrees >= 337.5) setWindDir("N");
+		else if (degrees >= 22.5 && degrees < 67.5) setWindDir("NE");
+		else if (degrees >= 67.5 && degrees < 112.5) setWindDir("E");
+		else if (degrees >= 112.5 && degrees < 157.5) setWindDir("SE");
+		else if (degrees >= 157.5 && degrees < 202.5) setWindDir("S");
+		else if (degrees >= 202.5 && degrees < 247.5) setWindDir("SW");
+		else if (degrees >= 247.5 && degrees < 292.5) setWindDir("W");
+		else if (degrees >= 292.5 && degrees < 337.5) setWindDir("NW");
 	};
 
 	const searchUrl = (e) => {
@@ -181,6 +181,7 @@ const Home = () => {
 	const addEditModal = () => ModalService.open(EdittabModal);
 	const changeCity = () => ModalService.open(CityModal);
 	const configModal = () => ModalService.open(ConfigModal);
+	const openWidget = () => ModalService.open(WidgetMobile);
 
 	const refreshCards = () => setRes({});
 	const refreshConfig = () => {
@@ -207,82 +208,92 @@ const Home = () => {
 
 	return (
 		<Background>
-			<ModalRoot refreshCards={refreshCards} refreshData={refreshData} refreshEngines={refreshConfig} />
-			<Menu>
-				<HiMenuAlt4 onClick={() => openOptions(!options)} />
-				<MenuMoreWeatherInfo ref={optionsRef} show={options} nopadd>
-					<MenuRow padd hov onClick={addModal}>
-						<AiOutlinePlusCircle />
-						<span>Add new card</span>
-					</MenuRow>
-					<MenuRow padd hov onClick={changeCity}>
-						<BiCurrentLocation />
-						<span>Change current city</span>
-					</MenuRow>
-					<MenuRow padd hov onClick={configModal}>
-						<RiSettings4Fill />
-						<span>Settings</span>
-					</MenuRow>
-				</MenuMoreWeatherInfo>
-				{status === "Done" && (
-					<ModalContainer flex jccenter aicenter>
-						<WeatherWidget
-							data={data}
-							cityname={cityname}
-							country={country}
-							windDir={windDir}
-							unit={unit}
-							menu={menu}
-							icon={icon}
-							sr={sunrise}
-							ss={sunset}
-							toggleMenu={() => openMenu(!menu)}
-							closeMenu={() => openMenu(false)}
-						/>
-						<WeatherMenuInfo>{cityname}</WeatherMenuInfo>
-						<WeatherMenuInfo>
-							{data.current.temp}
-							<sup>
-								{unit === "metric" ? "°C" : null}
-								{unit === "imperial" ? "°F" : null}
-								{unit === "default" ? "°K" : null}
-							</sup>
-						</WeatherMenuInfo>
-					</ModalContainer>
-				)}
-				{data.alerts && (
-					<>
-						<AlertBox>
-							<BsExclamationLg onClick={() => openAlerts(true)} />
-						</AlertBox>
-						<MenuMoreWeatherInfo alerts nopadd ref={alertsRef} show={alerts}>
-							<MenuTitle>Active alerts:</MenuTitle>
-							{data.alerts.map((alert) => {
-								const from = new Date(alert.start * 1000);
-								const to = new Date(alert.end * 1000);
-								const fromTime = `${from.getHours()}:${from.getMinutes() < 10 ? "0" : ""}${from.getMinutes()}`;
-								const toTime = `${to.getHours()}:${to.getMinutes() < 10 ? "0" : ""}${to.getMinutes()}`;
-
-								return (
-									<AlertRow>
-										<AlertTop>
-											<AlertTitle>{alert.event}!</AlertTitle>
-											<AlertTimes title="estimated time">
-												<span>{fromTime}</span>-<span>{toTime}</span>
-											</AlertTimes>
-										</AlertTop>
-										<AlertDesc>{alert.description}</AlertDesc>
-										<AlertSource>
-											<span>Source:</span>
-											<span>{alert.sender_name}</span>
-										</AlertSource>
-									</AlertRow>
-								);
-							})}
+			<ModalRoot data={data} wdir={windDir} refreshCards={refreshCards} refreshData={refreshData} refreshEngines={refreshConfig} />
+			<ModalContainer flex>
+				<Menu>
+					<div ref={optionsRef} onClick={() => openOptions(!options)}>
+						<HiMenuAlt4 />
+						<MenuMoreWeatherInfo show={options} nopadd>
+							<MenuRow padd hov onClick={addModal}>
+								<AiOutlinePlusCircle />
+								<span>Add new card</span>
+							</MenuRow>
+							<MenuRow padd hov onClick={changeCity}>
+								<BiCurrentLocation />
+								<span>Change current city</span>
+							</MenuRow>
+							<MenuRow padd hov onClick={configModal}>
+								<RiSettings4Fill />
+								<span>Settings</span>
+							</MenuRow>
+							<MenuRow padd hov onClick={props.toggleDM}>
+								<AiOutlinePlusCircle />
+								<span>Toggle Darkmode</span>
+							</MenuRow>
 						</MenuMoreWeatherInfo>
-					</>
-				)}
-			</Menu>
+					</div>
+
+					{status === "Done" && (
+						<ModalContainer flex jccenter aicenter>
+							<WeatherWidget
+								data={data}
+								cityname={cityname}
+								country={country}
+								windDir={windDir}
+								unit={unit}
+								menu={menu}
+								icon={icon}
+								sr={sunrise}
+								ss={sunset}
+								toggleMenu={() => openMenu(!menu)}
+								closeMenu={() => openMenu(false)}
+								widgetModal={() => openWidget(true)}
+							/>
+							<WeatherMenuInfo>{cityname}</WeatherMenuInfo>
+							<WeatherMenuInfo>
+								{data.current.temp}
+								<sup>
+									{unit === "metric" ? "°C" : null}
+									{unit === "imperial" ? "°F" : null}
+									{unit === "default" ? "°K" : null}
+								</sup>
+							</WeatherMenuInfo>
+							{data.alerts && (
+								<>
+									<AlertBox>
+										<BsExclamationLg onClick={() => openAlerts(true)} />
+									</AlertBox>
+									<MenuMoreWeatherInfo alerts nopadd ref={alertsRef} show={alerts}>
+										<MenuTitle>Active alerts:</MenuTitle>
+										{data.alerts.map((alert, index) => {
+											const from = new Date(alert.start * 1000);
+											const to = new Date(alert.end * 1000);
+											const fromTime = `${from.getHours()}:${from.getMinutes() < 10 ? "0" : ""}${from.getMinutes()}`;
+											const toTime = `${to.getHours()}:${to.getMinutes() < 10 ? "0" : ""}${to.getMinutes()}`;
+
+											return (
+												<AlertRow key={index}>
+													<AlertTop>
+														<AlertTitle>{alert.event}!</AlertTitle>
+														<AlertTimes title="estimated time">
+															<span>{fromTime}</span>-<span>{toTime}</span>
+														</AlertTimes>
+													</AlertTop>
+													<AlertDesc>{alert.description}</AlertDesc>
+													<AlertSource>
+														<span>Source:</span>
+														<span>{alert.sender_name}</span>
+													</AlertSource>
+												</AlertRow>
+											);
+										})}
+									</MenuMoreWeatherInfo>
+								</>
+							)}
+						</ModalContainer>
+					)}
+				</Menu>
+			</ModalContainer>
 
 			<Content>
 				<Greetings>
@@ -291,7 +302,7 @@ const Home = () => {
 				</Greetings>
 				<SearchForm onSubmit={searchUrl}>
 					<SearchBox>
-						<UrlInput name="url" placeholder="What do you want to search?" />
+						<UrlInput name="url" placeholder="Search something..." />
 						<FunctionBox engine={engine} onClick={configModal}>
 							{engine === "google" && <FcGoogle />}
 							{engine === "bing" && <DiBingSmall />}
