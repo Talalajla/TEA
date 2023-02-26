@@ -211,7 +211,7 @@ const Home = (props) => {
 			<ModalRoot data={data} wdir={windDir} refreshCards={refreshCards} refreshData={refreshData} refreshEngines={refreshConfig} />
 			<ModalContainer flex>
 				<Menu>
-					<div ref={optionsRef} onClick={() => openOptions(!options)}>
+					<div ref={optionsRef} onClick={() => openOptions(!options)} style={{ position: "relative" }}>
 						<HiMenuAlt4 />
 						<MenuMoreWeatherInfo show={options} nopadd>
 							<MenuRow padd hov onClick={addModal}>

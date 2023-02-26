@@ -9,7 +9,6 @@ import WeatherIcons from "../../files/home/weatherIcons";
 import { useClickAway } from "react-use";
 
 const MobileWidget = (props) => {
-	console.log(props);
 	const data = props.data;
 
 	const helpBtn = useRef("");

@@ -2,8 +2,8 @@ import styled from "styled-components";
 import { css } from "styled-components";
 
 export const Menu = styled.div`
-	padding: 30px;
-	padding-bottom: 0;
+	padding: 30px 30px 0 0;
+	margin-left: 30px;
 	z-index: 2;
 	font-size: 25px;
 	display: flex;
@@ -203,7 +203,6 @@ export const MenuRow = styled.div`
 		mobile &&
 		css`
 			display: none;
-			@media (max-width: 500px);
 		`}
 `;
 

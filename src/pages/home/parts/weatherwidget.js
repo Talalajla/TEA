@@ -60,7 +60,7 @@ export default function WeatherWidget(props) {
 						<ModalContainer flex col gap="5">
 							<ModalContainer flex col gap="5" notmobile>
 								<MenuHr />
-								<MenuRow>Coords:</MenuRow>
+								<MenuRow>Coords</MenuRow>
 								<MenuRow>
 									<MenuRowDesc>
 										<MenuRowData>Lat: </MenuRowData>

@@ -7,6 +7,8 @@ const CurrentImage = styled.div`
 	width: 100%;
 	height: 100%;
 	background-position: center bottom;
+	background-repeat: no-repeat;
+	background-size: cover;
 	background-image: ${({ nr }) => {
 		const res = Object.entries(Images);
 		let src;
