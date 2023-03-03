@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { css } from "styled-components";
 
-export const Menu = styled.div`
+export const MenuContainer = styled.div`
 	padding: 30px 30px 0 0;
 	margin-left: 30px;
 	z-index: 2;
@@ -140,6 +140,18 @@ export const MenuMoreWeatherInfo = styled.div`
 	visibility: hidden;
 	transition: opacity 0.1s, transform 0.1s, visibility 0.1s;
 
+	&.paddItems >* {
+		padding: 15px;
+		:hover {
+			background: rgba(0, 0, 0, 0.1);
+			cursor: pointer;
+		}
+	}
+
+	a {
+		color: ${({ theme }) => theme.text};
+	}
+
 	${({ show }) =>
 		show &&
 		css`
@@ -174,21 +186,12 @@ export const MenuRow = styled.div`
 	gap: 10px;
 	justify-content: ${({ space }) => (space ? "space-between" : null)};
 	font-size: ${({ bigfz }) => (bigfz ? "18px" : "15px")};
-	padding: ${({ padd }) => (padd ? "15px" : "0")};
 
 	svg {
 		color: ${({ theme }) => theme.text};
 		font-size: 20px;
 	}
 
-	${({ hov }) =>
-		hov &&
-		css`
-			:hover {
-				background: rgba(0, 0, 0, 0.1);
-				cursor: pointer;
-			}
-		`}
 	${({ title, theme }) =>
 		title &
 		css`

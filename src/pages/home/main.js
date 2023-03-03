@@ -1,13 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
-import { AiOutlinePlusCircle } from "react-icons/ai";
-import { BiCurrentLocation } from "react-icons/bi";
 import { BsExclamationLg } from "react-icons/bs";
 import { DiBingSmall } from "react-icons/di";
 import { FaYahoo } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
-import { HiMenuAlt4 } from "react-icons/hi";
 import { MdSearch } from "react-icons/md";
-import { RiSettings4Fill } from "react-icons/ri";
 import { SiDuckduckgo } from "react-icons/si";
 
 import {
@@ -21,9 +17,8 @@ import {
 	Content,
 	FunctionBox,
 	Greetings,
-	Menu,
+	MenuContainer,
 	MenuMoreWeatherInfo,
-	MenuRow,
 	MenuTitle,
 	SearchBox,
 	SearchForm,
@@ -45,6 +40,7 @@ import WidgetMobile from "./mobileWidget";
 import Cards from "./parts/cards";
 import Background from "../../layout/background";
 import { ModalContainer } from "../../styles/modal/main";
+import MenuBar from "../shared/menubar";
 
 const Home = (props) => {
 	const [lat, setLat] = useState(null);
@@ -57,10 +53,8 @@ const Home = (props) => {
 	const [time, setTime] = useState(
 		`${new Date().getHours() < 10 ? "0" : ""}${new Date().getHours()}:${new Date().getMinutes() < 10 ? "0" : ""}${new Date().getMinutes()}`
 	);
-	const optionsRef = useRef("");
 	const alertsRef = useRef("");
 	const [menu, openMenu] = useState(false);
-	const [options, openOptions] = useState(false);
 	const [alerts, openAlerts] = useState(true);
 	const [res, setRes] = useState();
 	const [message, setMessage] = useState("Good morning, ");
@@ -74,14 +68,6 @@ const Home = (props) => {
 
 	const apikey = "c60621f6b01ac75d9cb4f8afef300fdc";
 	// const apikey = "0849360447e69eda07189e0b383ff858";
-
-	useClickAway(
-		optionsRef,
-		() => {
-			openOptions(false);
-		},
-		["mouseup"]
-	);
 
 	useClickAway(alertsRef, () => openAlerts(false), ["mouseup"]);
 
@@ -210,28 +196,14 @@ const Home = (props) => {
 		<Background>
 			<ModalRoot data={data} wdir={windDir} refreshCards={refreshCards} refreshData={refreshData} refreshEngines={refreshConfig} />
 			<ModalContainer flex>
-				<Menu>
-					<div ref={optionsRef} onClick={() => openOptions(!options)} style={{ position: "relative" }}>
-						<HiMenuAlt4 />
-						<MenuMoreWeatherInfo show={options} nopadd>
-							<MenuRow padd hov onClick={addModal}>
-								<AiOutlinePlusCircle />
-								<span>Add new card</span>
-							</MenuRow>
-							<MenuRow padd hov onClick={changeCity}>
-								<BiCurrentLocation />
-								<span>Change current city</span>
-							</MenuRow>
-							<MenuRow padd hov onClick={configModal}>
-								<RiSettings4Fill />
-								<span>Settings</span>
-							</MenuRow>
-							<MenuRow padd hov onClick={props.toggleDM}>
-								<AiOutlinePlusCircle />
-								<span>Toggle Darkmode</span>
-							</MenuRow>
-						</MenuMoreWeatherInfo>
-					</div>
+				<MenuContainer>
+					<MenuBar
+						toggleDM={props.toggleDM} 
+						addModal={addModal}
+						changeCity={changeCity}
+						configModal={configModal}
+						page="landing"
+					/>
 
 					{status === "Done" && (
 						<ModalContainer flex jccenter aicenter>
@@ -292,7 +264,7 @@ const Home = (props) => {
 							)}
 						</ModalContainer>
 					)}
-				</Menu>
+				</MenuContainer>
 			</ModalContainer>
 
 			<Content>

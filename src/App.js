@@ -21,7 +21,7 @@ const App = () => {
 			<BrowserRouter>
 				<Routes>
 					<Route index path="/" element={<Home toggleDM={toggleTheme} />} />
-					<Route path="/weather" element={<Weather />} />
+					<Route path="/weather" element={<Weather toggleDM={toggleTheme} />} />
 				</Routes>
 			</BrowserRouter>
 		</ThemeProvider>
