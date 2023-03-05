@@ -50,6 +50,8 @@ export default function Weather(props) {
 		generateNextDays();
 	}, [])
 
+	console.log(days);
+
 	return (
 		<Background>
 			<ModalRoot />

@@ -15,6 +15,7 @@ import {
 } from "../../../styles/home/main";
 import { useClickAway } from "react-use";
 import { ModalContainer } from "../../../styles/modal/main";
+import { UnitFromText } from "../../shared/helper/unit";
 
 export default function WeatherWidget(props) {
 	const menuRef = useRef("");
@@ -23,10 +24,7 @@ export default function WeatherWidget(props) {
 	const [helpUV, showHelpUV] = useState(false);
 
 	const data = props.data;
-	let symbolUnit;
-	if (props.unit === "metric") symbolUnit = "°C";
-	else if (props.unit === "imperial") symbolUnit = "°F";
-	else if (props.unit === "default") symbolUnit = "°K";
+	let symbolUnit = UnitFromText(props.unit);
 
 	useEffect(() => {
 		const uvNum = Math.round(data.current.uvi);
