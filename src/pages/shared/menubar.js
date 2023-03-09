@@ -1,9 +1,10 @@
 import React, { useRef, useState } from 'react'
 import { AiOutlinePlusCircle } from 'react-icons/ai';
+import { AiOutlineRollback } from "react-icons/ai"
 import { BiCurrentLocation } from 'react-icons/bi';
+import { BsCloudSun } from "react-icons/bs";
 import { HiMenuAlt4 } from 'react-icons/hi';
 import { RiSettings4Fill } from 'react-icons/ri';
-import { AiOutlineRollback } from "react-icons/ai"
 import { useClickAway } from 'react-use';
 import { MenuMoreWeatherInfo, MenuRow } from '../../styles/home/main';
 import { Link } from 'react-router-dom';
@@ -31,6 +32,10 @@ const MenuBar = (props) => {
                 <MenuRow onClick={props.changeCity}>
                     <BiCurrentLocation />
                     <span>Change current city</span>
+                </MenuRow>
+                <MenuRow as={Link} to="/weather">
+                    <BsCloudSun />
+                    <span>Weather for next days</span>
                 </MenuRow>
                 <MenuRow onClick={props.configModal}>
                     <RiSettings4Fill />

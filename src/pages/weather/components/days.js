@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { DayItem, DaysContainer } from "../../../styles/weather/days";
+import { DayItem, DayRadio, DaysContainer } from "../../../styles/weather/days";
 import { UnitFromText } from "../../shared/helper/unit";
 
 const findMostFrequentItem = (arr) => {
@@ -53,11 +53,13 @@ const findDayName = (id) => {
     else return "Error";
 } 
 
-const Day = ({day, dayInfo, index}) => {
+const Day = (props) => {
     const [avgTemp, setAvgTemp] = useState('');
     const [dayDesc, setDayDesc] = useState('');
     const [dayIcon, setDayIcon] = useState('');
     const [unit, setUnit] = useState('');
+
+    const {day, dayInfo, index} = props;
 
     useEffect(() => {
         const getAvgStats = () => {
@@ -79,29 +81,32 @@ const Day = ({day, dayInfo, index}) => {
     if (unit !== '')
         unitText = UnitFromText(unit);
     
-
+    const createID = `day${index}`;
     return (
-        <DayItem>
-            <div>
-                {dayInfo.dayNumber[index]} {dayInfo.dayName[index]}
-            </div>
-            <div>
-                {avgTemp}<sup>{unitText}</sup>
-            </div>
-            <img src={dayIcon} alt={dayDesc} />
-            <div>
-                {dayDesc}
-            </div>
-        </DayItem>
+        <label htmlFor={createID}>
+            <DayRadio defaultChecked={index===0?true:false} name="day" id={createID} value={index} onInput={props.changeDay} />
+            <DayItem>
+                <div>
+                    {dayInfo.dayNumber[index]} {dayInfo.dayName[index]}
+                </div>
+                <div>
+                    {avgTemp}<sup>{unitText}</sup>
+                </div>
+                <img src={dayIcon} alt={dayDesc} />
+                <div>
+                    {dayDesc}
+                </div>
+            </DayItem>
+        </label>
     );
 }
 
-const Days = ({days, daysInfo}) => {
+const Days = ({days, daysInfo, changeDay}) => {
     if (!days || !daysInfo) return;
 
     return(
         <DaysContainer>
-            {days.map((day, index) => <Day day={day} dayInfo={daysInfo} index={index} key={index} /> )}
+            {days.map((day, index) => <Day changeDay={changeDay} day={day} dayInfo={daysInfo} index={index} key={index} /> )}
         </DaysContainer>
     );
 }

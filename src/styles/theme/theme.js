@@ -9,6 +9,8 @@ export const lightTheme = {
 	white: "#dcdfe3",
 	blue1: "#0373fc",
 	blue2: "#308dff",
+	weatherCards: "rgb(255 255 255 / .5)",
+	weatherCardsTxt: "#000",
 };
 
 export const darkTheme = {
@@ -22,4 +24,6 @@ export const darkTheme = {
 	white: "#dcdfe3",
 	blue1: "#0373fc",
 	blue2: "#308dff",
+	weatherCards: "rgb(0 0 0 / .5)",
+	weatherCardsTxt: "#fff",
 };
