@@ -1,19 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Line } from "react-chartjs-2";
 import { UnitFromText } from '../../shared/helper/unit';
 import { externalTooltipHandler } from './tooltip';
 
-const LineChart = ({chartDays, chartHours}) => {
-    const [unit, setUnit] = useState('metric');
-    useEffect(() => {
-		if (localStorage.getItem("tempunit")) setUnit(localStorage.getItem("tempunit"));
-    }, []);
-
-    console.log(unit);
-
+const LineChart = ({chartDays, chartHours, unit, title}) => {
     return (
     <div className='chart-container'>
         <h2 style={{textAlign: 'center'}}>Daily weather chart</h2>
+        <h3 style={{textAlign: 'center'}}>{title}</h3>
         <Line 
             data={{
                 datasets: [{

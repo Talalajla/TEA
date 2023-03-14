@@ -43,8 +43,7 @@ import { ModalContainer } from "../../styles/modal/main";
 import MenuBar from "../shared/menubar";
 
 const Home = (props) => {
-	const [lat, setLat] = useState(null);
-	const [lon, setLon] = useState(null);
+	const [cityData, setCityData] = useState(null);
 	const [cityname, setCityName] = useState(null);
 	const [country, setCountry] = useState(null);
 
@@ -72,13 +71,14 @@ const Home = (props) => {
 	useClickAway(alertsRef, () => openAlerts(false), ["mouseup"]);
 
 	useEffect(() => {
-		if (localStorage.getItem("cityLat")) setLat(localStorage.getItem("cityLat"));
-		if (localStorage.getItem("cityLon")) setLon(localStorage.getItem("cityLon"));
+		if (localStorage.getItem("TED_cityData")) setCityData(JSON.parse(localStorage.getItem("TED_cityData")));
+		// if (localStorage.getItem("cityLat")) setLat(localStorage.getItem("cityLat"));
+		// if (localStorage.getItem("cityLon")) setLon(localStorage.getItem("cityLon"));
 		if (localStorage.getItem("cityName")) setCityName(localStorage.getItem("cityName"));
 		if (localStorage.getItem("countryName")) setCountry(localStorage.getItem("countryName"));
 		if (localStorage.getItem("searchengine")) setEngine(localStorage.getItem("searchengine"));
 		if (localStorage.getItem("tempunit")) setUnit(localStorage.getItem("tempunit"));
-		if (!lat || !lon || !cityname || !country) return;
+		if (!cityData) return;
 
 		let hour = new Date().getHours();
 		if (hour >= 5 && hour < 12) setMessage("Good morning, ");
@@ -87,7 +87,7 @@ const Home = (props) => {
 
 		const fetchData = async () => {
 			setStatus("Fetching");
-			const response = await fetch(`https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&units=${unit}&appid=${apikey}`);
+			const response = await fetch(`https://api.openweathermap.org/data/2.5/onecall?lat=${cityData.lat}&lon=${cityData.lon}&units=${unit}&appid=${apikey}`);
 			const data = await response.json();
 			setData(data);
 			setIcon(`https://openweathermap.org/img/wn/${data.current.weather[0].icon}.png`);
@@ -95,12 +95,12 @@ const Home = (props) => {
 			console.log("first load");
 		};
 		if (status === "idle") fetchData();
-	}, [status, lat, lon, cityname, country, unit]);
+	}, [status, country, unit]);
 
 	useEffect(() => {
 		const interval = setInterval(async () => {
 			setStatus("Updating");
-			const response = await fetch(`https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&units=${unit}&appid=${apikey}`);
+			const response = await fetch(`https://api.openweathermap.org/data/2.5/onecall?lat=${cityData.lat}&lon=${cityData.lon}&units=${unit}&appid=${apikey}`);
 			const data = await response.json();
 			setData(data);
 			setIcon(`https://openweathermap.org/img/wn/${data.current.weather[0].icon}.png`);
@@ -110,7 +110,7 @@ const Home = (props) => {
 		return () => {
 			clearInterval(interval);
 		};
-	}, [lat, lon, unit]);
+	}, [cityData, unit]);
 
 	useEffect(() => {
 		const interval = setInterval(() => {
@@ -176,12 +176,11 @@ const Home = (props) => {
 	};
 	const refreshData = () => {
 		const unitRequest = localStorage.getItem("tempunit");
-		const latRequest = localStorage.getItem("cityLat");
-		const lonRequest = localStorage.getItem("cityLon");
 		const fetchData = async () => {
 			setStatus("Fetching");
+			console.log(cityData);
 			const response = await fetch(
-				`https://api.openweathermap.org/data/2.5/onecall?lat=${latRequest}&lon=${lonRequest}&units=${unitRequest}&appid=${apikey}`
+				`https://api.openweathermap.org/data/2.5/onecall?lat=${cityData.lat}&lon=${cityData.lon}&units=${unitRequest}&appid=${apikey}`
 			);
 			const data = await response.json();
 			setData(data);
@@ -209,7 +208,7 @@ const Home = (props) => {
 						<ModalContainer flex jccenter aicenter>
 							<WeatherWidget
 								data={data}
-								cityname={cityname}
+								cityname={cityData.city}
 								country={country}
 								windDir={windDir}
 								unit={unit}
@@ -221,7 +220,7 @@ const Home = (props) => {
 								closeMenu={() => openMenu(false)}
 								widgetModal={() => openWidget(true)}
 							/>
-							<WeatherMenuInfo>{cityname}</WeatherMenuInfo>
+							<WeatherMenuInfo>{cityData.city}</WeatherMenuInfo>
 							<WeatherMenuInfo>
 								{data.current.temp}
 								<sup>

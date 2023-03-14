@@ -5,7 +5,7 @@ export const useDarkMode = () => {
 	const [mountedComponent, setMountedComponent] = useState(false);
 
 	const setMode = (mode) => {
-		window.localStorage.setItem("theme", mode);
+		window.localStorage.setItem("TED_theme", mode);
 		setTheme(mode);
 	};
 
@@ -14,7 +14,7 @@ export const useDarkMode = () => {
 	};
 
 	useEffect(() => {
-		const localTheme = window.localStorage.getItem("theme");
+		const localTheme = window.localStorage.getItem("TED_theme");
 		localTheme && setTheme(localTheme);
 		setMountedComponent(true);
 	}, []);

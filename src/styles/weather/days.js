@@ -24,7 +24,7 @@ export const DayItem = styled.div`
     cursor: pointer;
 
     :hover {
-        box-shadow: 0 0 0 5px ${({theme}) => theme.text} inset;
+        background-color: ${({theme}) => theme.weatherCardsHov};
     }
 `;
 

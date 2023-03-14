@@ -11,17 +11,16 @@ const CityModal = (props) => {
 	// const [refresh, setRefresh] = useState({});
 	const formSearch = useRef("");
 	const formCities = useRef("");
+	console.log('test');
 	const [newcity, setNewcity] = useState("-");
-	const [cityarray, setCityarray] = useState([]);
+	const [cityArray, setCityArray] = useState([]);
 	const [status, setStatus] = useState("idle");
 	const apikey = "c60621f6b01ac75d9cb4f8afef300fdc";
 
-	useEffect(() => {
-		const currentCity = localStorage.getItem("city");
-		if (currentCity) {
-			setNewcity(currentCity);
-		}
-	}, []);
+	// useEffect(() => {
+	// 	const cityObj = JSON.parse(localStorage.getItem("TED_cityData"))
+	// 	if (cityObj) setNewcity(cityObj);
+	// }, []);
 
 	const searchCities = (e) => {
 		if (newcity !== "-") {
@@ -35,7 +34,7 @@ const CityModal = (props) => {
 			setStatus("loading cities");
 			const response = await fetch(`http://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=5&appid=${apikey}`);
 			const data = await response.json();
-			setCityarray(data);
+			setCityArray(data);
 			setStatus("idle");
 		};
 		if (status === "idle") fetchCities();
@@ -44,10 +43,14 @@ const CityModal = (props) => {
 	const saveCity = (e) => {
 		e.preventDefault();
 		if (newcity === "-") return;
-		localStorage.setItem("cityLat", newcity.lat);
-		localStorage.setItem("cityLon", newcity.lon);
-		localStorage.setItem("cityName", newcity.name);
-		localStorage.setItem("countryName", newcity.country);
+		const cityObj = {
+			city: newcity.name,
+			country: newcity.country,
+			state: newcity.state,
+			lat: newcity.lat,
+			lon: newcity.lon
+		}
+		localStorage.setItem("TED_cityData", JSON.stringify(cityObj));
 		props.close();
 		props.refreshData();
 	};
@@ -57,10 +60,10 @@ const CityModal = (props) => {
 		let checkedIndex;
 		if (listItems.length >= 2) {
 			listItems.forEach((item, index) => (item.checked ? (checkedIndex = index) : null));
-			setNewcity(cityarray[checkedIndex]);
-			console.log(cityarray[checkedIndex]);
+			setNewcity(cityArray[checkedIndex]);
+			// console.log(cityArray[checkedIndex]);
 		} else {
-			setNewcity(cityarray[0]);
+			setNewcity(cityArray[0]);
 		}
 	};
 
@@ -91,9 +94,9 @@ const CityModal = (props) => {
 					</ModalContainer>
 					<ModalContainer flex col as="form" ref={formCities}>
 						<ModalRow>Choose your city:</ModalRow>
-						{cityarray !== [] && (
+						{cityArray !== [] && (
 							<CityList>
-								{cityarray.map((item, index) => (
+								{cityArray.map((item, index) => (
 									<CityListItem key={index}>
 										<CityItemLabel onInput={overrideCity}>
 											<CityHiddenRadio name="cityRadio" />

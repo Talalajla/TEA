@@ -96,8 +96,13 @@ const generateNextDays = (days) => {
 
 export default function Weather(props) {
 	const apikey = "0849360447e69eda07189e0b383ff858";
-	const [lat, setLat] = useState('50.68');
-	const [lon, setLon] = useState('17.93');
+	const [cityData, setCityData] = useState({
+		city: 'Warsaw',
+		Country: 'PL',
+		lat: '52.2319581',
+		lon: '21.0067249',
+		state: 'Masovian Voivodeship'
+	});
 	const [days, setDays] = useState(null);
 	const [daysInfo, setDaysInfo] = useState(null);
 	const [chartDays, setChartDays] = useState(null);
@@ -105,45 +110,23 @@ export default function Weather(props) {
 	const [chartData, setChartData] = useState(null);
 	const [activeChart, setActiveChart] = useState(0); //today
 	const [unit, setUnit] = useState();
-	const [cityData, setCityData] = useState({
-		city: 'Warsaw',
-		lat: '52.2298',
-		lon: '21.0118',
-		state: '',
-		country: 'PL'
-	});
-
-	console.log(cityData);
-	const apiRequest = `https://api.openweathermap.org/data/2.5/forecast?lat=${cityData.lat}&lon=${cityData.lon}&units=${unit}&appid=${apikey}`;
-	const { data } = useFetch(apiRequest);
-    useEffect(() => {
-		if (localStorage.getItem("tempunit")) setUnit(localStorage.getItem("tempunit"));
-		if (localStorage.getItem('TED_cityData')) setCityData(JSON.parse(localStorage.getItem('TED_cityData')));
-		// if (localStorage.getItem("cityLon")) setLon(localStorage.getItem("cityLon"));
-		// if (localStorage.getItem("cityLat")) setLat(localStorage.getItem("cityLat"));
-    }, []);
-
+	
+	// const { data } = useFetch(`https://api.openweathermap.org/data/2.5/forecast?lat=${cityData.lat}&lon=${cityData.lon}&units=${unit}&appid=${apikey}`);
+	
+	let data ='';
 	useEffect(() => {
-		if (data) setDays(groupData(data.list));
-	}, [data]);
-
-	useEffect(() => {
-		if (days) setChartDays(extractDaysData(days));
-	}, [days]);
-	useEffect(() => {
-		if (days) setChartHours(extractHoursData(days));
-	}, [days]);
-
-	useEffect(() => {
-		if (chartDays && chartHours)
-			setChartData(fillChartWithData(chartDays, chartHours));
-	}, [chartDays, chartHours, data])
-
-	useEffect(() => {
-		if (days) {
-			setDaysInfo(generateNextDays(days));
-		}
-	}, [days]);
+		const storedUnit = localStorage.getItem("tempunit");
+		const storedCityData = localStorage.getItem("TED_cityData");
+		if (storedUnit) setUnit(storedUnit);
+		if (storedCityData) setCityData(JSON.parse(storedCityData));
+	  }, []);
+	
+	
+	useEffect(() => data && setDays(groupData(data.list)), [data]);
+	useEffect(() => days && setChartDays(extractDaysData(days)), [days]);
+	useEffect(() => days && setChartHours(extractHoursData(days)), [days]);
+	useEffect(() => chartDays && chartHours && setChartData(fillChartWithData(chartDays, chartHours)), [chartDays, chartHours, data]);
+	useEffect(() => days && setDaysInfo(generateNextDays(days)), [days]);
 
 	const changeDay = (e) => setActiveChart(e.currentTarget.value);
 
