@@ -7,7 +7,7 @@ import { DefaultRadio, ModalButton, ModalContainer, ModalLabel, ModalRow } from 
 import { RadioCircle, SelectContainer } from "../../styles/home/settings";
 import { BsGoogle } from "react-icons/bs";
 import { DiBingSmall } from "react-icons/di";
-import { FaYahoo } from "react-icons/fa";
+import { FaAmazon, FaReddit, FaTwitch, FaWikipediaW, FaYahoo, FaYoutube } from "react-icons/fa";
 import { SiDuckduckgo } from "react-icons/si";
 import { FcGoogle } from "react-icons/fc";
 
@@ -43,7 +43,7 @@ const Settings = (props) => {
 							<ModalLabel type="google" cp>
 								<DefaultRadio defaultChecked={chosenEngine === "google"} name="searchEngine" data-engine="google" />
 								<BsGoogle size="24" />
-								<FcGoogle />
+								<FcGoogle size="24" />
 							</ModalLabel>
 							<ModalLabel type="bing" cp>
 								<DefaultRadio defaultChecked={chosenEngine === "bing"} name="searchEngine" data-engine="bing" />
@@ -53,9 +53,29 @@ const Settings = (props) => {
 								<DefaultRadio defaultChecked={chosenEngine === "yahoo"} name="searchEngine" data-engine="yahoo" />
 								<FaYahoo />
 							</ModalLabel>
-							<ModalLabel type="duck" cp>
+							<ModalLabel type="duckduckgo" cp>
 								<DefaultRadio defaultChecked={chosenEngine === "duckduckgo"} name="searchEngine" data-engine="duckduckgo" />
 								<SiDuckduckgo />
+							</ModalLabel>
+							<ModalLabel type="amazon" cp>
+								<DefaultRadio defaultChecked={chosenEngine === "amazon"} name="searchEngine" data-engine="amazon" />
+								<FaAmazon />
+							</ModalLabel>
+							<ModalLabel type="twitch" cp>
+								<DefaultRadio defaultChecked={chosenEngine === "twitch"} name="searchEngine" data-engine="twitch" />
+								<FaTwitch />
+							</ModalLabel>
+							<ModalLabel type="reddit" cp>
+								<DefaultRadio defaultChecked={chosenEngine === "reddit"} name="searchEngine" data-engine="reddit" />
+								<FaReddit />
+							</ModalLabel>
+							<ModalLabel type="youtube" cp>
+								<DefaultRadio defaultChecked={chosenEngine === "youtube"} name="searchEngine" data-engine="youtube" />
+								<FaYoutube />
+							</ModalLabel>
+							<ModalLabel type="wikipedia" cp>
+								<DefaultRadio defaultChecked={chosenEngine === "wikipedia"} name="searchEngine" data-engine="wikipedia" />
+								<FaWikipediaW />
 							</ModalLabel>
 						</SelectContainer>
 					</ModalRow>

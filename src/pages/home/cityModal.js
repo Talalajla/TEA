@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import Modal from "../../components/modal/modal";
 import ModalPartHeader from "../../components/modal/modalHeader";
 import ModalPartBody from "../../components/modal/modalBody";

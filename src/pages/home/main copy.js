@@ -1,11 +1,11 @@
 import React, { useEffect, useRef, useState } from "react";
 import { BsExclamationLg } from "react-icons/bs";
 import { DiBingSmall } from "react-icons/di";
-import { FaYahoo, FaYoutube, FaTwitch, FaReddit } from "react-icons/fa";
-import { FcGoogle, FcWikipedia } from "react-icons/fc";
+import { FaYahoo } from "react-icons/fa";
+import { FcGoogle } from "react-icons/fc";
 import { MdSearch } from "react-icons/md";
 import { SiDuckduckgo } from "react-icons/si";
-import amazon from "../../styles/home/amazon.png";
+
 import {
 	AlertBox,
 	AlertDesc,
@@ -44,6 +44,8 @@ import MenuBar from "../shared/menubar";
 
 const Home = (props) => {
 	const [cityData, setCityData] = useState(null);
+	const [cityname, setCityName] = useState(null);
+	const [country, setCountry] = useState(null);
 
 	const [unit, setUnit] = useState("");
 	const [engine, setEngine] = useState("");
@@ -63,20 +65,20 @@ const Home = (props) => {
 	const [sunrise, setSunrise] = useState("");
 	const [sunset, setSunset] = useState("");
 
-	const searchRef = useRef(null);
-
 	const apikey = "c60621f6b01ac75d9cb4f8afef300fdc";
 	// const apikey = "0849360447e69eda07189e0b383ff858";
 
 	useClickAway(alertsRef, () => openAlerts(false), ["mouseup"]);
 
 	useEffect(() => {
-		if (!cityData && localStorage.getItem("TED_cityData")) setCityData(JSON.parse(localStorage.getItem("TED_cityData")));
-		if (!engine && localStorage.getItem("searchengine")) setEngine(localStorage.getItem("searchengine"));
-		if (!unit && localStorage.getItem("tempunit")) setUnit(localStorage.getItem("tempunit"));
+		if (localStorage.getItem("TED_cityData")) setCityData(JSON.parse(localStorage.getItem("TED_cityData")));
+		// if (localStorage.getItem("cityLat")) setLat(localStorage.getItem("cityLat"));
+		// if (localStorage.getItem("cityLon")) setLon(localStorage.getItem("cityLon"));
+		if (localStorage.getItem("cityName")) setCityName(localStorage.getItem("cityName"));
+		if (localStorage.getItem("countryName")) setCountry(localStorage.getItem("countryName"));
+		if (localStorage.getItem("searchengine")) setEngine(localStorage.getItem("searchengine"));
+		if (localStorage.getItem("tempunit")) setUnit(localStorage.getItem("tempunit"));
 		if (!cityData) return;
-
-		console.log('citydata should change');
 
 		let hour = new Date().getHours();
 		if (hour >= 5 && hour < 12) setMessage("Good morning, ");
@@ -87,23 +89,19 @@ const Home = (props) => {
 			setStatus("Fetching");
 			const response = await fetch(`https://api.openweathermap.org/data/2.5/onecall?lat=${cityData.lat}&lon=${cityData.lon}&units=${unit}&appid=${apikey}`);
 			const data = await response.json();
-			console.log("ONECALL/: ", response, data);
 			setData(data);
 			setIcon(`https://openweathermap.org/img/wn/${data.current.weather[0].icon}.png`);
-			console.log('citydata changed');
 			setStatus("Done");
 			console.log("first load");
 		};
-		if (status === "idle" || status === 'reload') 
-		fetchData();
-	}, [status, unit, cityData]);
+		if (status === "idle") fetchData();
+	}, [status, country, unit]);
 
 	useEffect(() => {
 		const interval = setInterval(async () => {
 			setStatus("Updating");
 			const response = await fetch(`https://api.openweathermap.org/data/2.5/onecall?lat=${cityData.lat}&lon=${cityData.lon}&units=${unit}&appid=${apikey}`);
 			const data = await response.json();
-
 			setData(data);
 			setIcon(`https://openweathermap.org/img/wn/${data.current.weather[0].icon}.png`);
 			setStatus("Done");
@@ -128,48 +126,6 @@ const Home = (props) => {
 			clearInterval(interval);
 		};
 	}, []);
-
-	useEffect(() => {
-		const handleKeyDown = (e) => {
-			if (searchRef.current === document.activeElement) return;
-			if (e.shiftKey && e.keyCode === 71) {
-				localStorage.setItem('searchengine', 'google');
-				setEngine('google');
-			} else if (e.shiftKey && e.keyCode === 68) {
-				localStorage.setItem('searchengine', 'duckduckgo');
-				setEngine('duckduckgo');
-			} else if (e.shiftKey && e.keyCode === 66) {
-				localStorage.setItem('searchengine', 'bing');
-				setEngine('bing');
-			} else if (e.shiftKey && e.keyCode === 49) {
-				localStorage.setItem('searchengine', 'yahoo');
-				setEngine('yahoo');
-			} else if (e.shiftKey && e.keyCode === 65) {
-				localStorage.setItem('searchengine', 'amazon');
-				setEngine('amazon');
-			} else if (e.shiftKey && e.keyCode === 82) {
-				localStorage.setItem('searchengine', 'reddit');
-				setEngine('reddit');
-			} else if (e.shiftKey && e.keyCode === 84) {
-				localStorage.setItem('searchengine', 'twitch');
-				setEngine('twitch');
-			} else if (e.shiftKey && e.keyCode === 89) {
-				localStorage.setItem('searchengine', 'youtube');
-				setEngine('youtube');
-			} else if (e.shiftKey && e.keyCode === 87) {
-				localStorage.setItem('searchengine', 'wikipedia');
-				setEngine('wikipedia');
-			} 
-		}
-
-		document.addEventListener('keydown', handleKeyDown);
-
-		return () => {
-			document.removeEventListener('keydown', handleKeyDown);
-		}
-
-	}, []);
-	console.log(engine);
 
 	const setAdditionals = () => {
 		const tdSunrise = new Date(data.current.sunrise * 1000);
@@ -196,11 +152,6 @@ const Home = (props) => {
 		if (engine === "google") enginePrefix = "https://www.google.com/search?q=";
 		else if (engine === "bing") enginePrefix = "https://www.bing.com/search?q=";
 		else if (engine === "yahoo") enginePrefix = "https://search.yahoo.com/search?p=";
-		else if (engine === "amazon") enginePrefix = "https://www.amazon.com/s?k=";
-		else if (engine === "reddit") enginePrefix = "https://www.reddit.com/search/?q=";
-		else if (engine === "twitch") enginePrefix = "https://www.twitch.tv/search?term=";
-		else if (engine === "youtube") enginePrefix = "https://www.youtube.com/results?search_query=";
-		else if (engine === "wikipedia") enginePrefix = "https://en.wikipedia.org/w/index.php?search=";
 		else enginePrefix = "https://duckduckgo.com/?q=";
 
 		const whatDoWeSearch = e.currentTarget.url.value;
@@ -224,25 +175,22 @@ const Home = (props) => {
 		setUnit(localStorage.getItem("tempunit"));
 	};
 	const refreshData = () => {
-		setCityData(JSON.parse(localStorage.getItem('TED_cityData')));
-		setStatus('reload');
-		// const unitRequest = localStorage.getItem("tempunit");
-		// if (cityData !== JSON.parse(localStorage.getItem('TED_cityData')))
-		// else {
-		// 	const fetchData = async () => {
-		// 		setStatus("Fetching");
-		// 		console.log(cityData);
-		// 		const response = await fetch(
-		// 			`https://api.openweathermap.org/data/2.5/onecall?lat=${cityData.lat}&lon=${cityData.lon}&units=${unitRequest}&appid=${apikey}`
-		// 		);
-		// 		const data = await response.json();
-		// 		setData(data);
-		// 		etStatus("Done");
-		// 		console.log("refresh data");
-		// 	};
-		// 	fetchData();
-		// }
+		const unitRequest = localStorage.getItem("tempunit");
+		const fetchData = async () => {
+			setStatus("Fetching");
+			console.log(cityData);
+			const response = await fetch(
+				`https://api.openweathermap.org/data/2.5/onecall?lat=${cityData.lat}&lon=${cityData.lon}&units=${unitRequest}&appid=${apikey}`
+			);
+			const data = await response.json();
+			setData(data);
+			setIcon(`https://openweathermap.org/img/wn/${data.current.weather[0].icon}.png`);
+			setStatus("Done");
+			console.log("refresh data");
+		};
+		fetchData();
 	};
+
 	return (
 		<Background>
 			<ModalRoot data={data} wdir={windDir} refreshCards={refreshCards} refreshData={refreshData} refreshEngines={refreshConfig} />
@@ -261,7 +209,7 @@ const Home = (props) => {
 							<WeatherWidget
 								data={data}
 								cityname={cityData.city}
-								country={cityData.country}
+								country={country}
 								windDir={windDir}
 								unit={unit}
 								menu={menu}
@@ -325,17 +273,12 @@ const Home = (props) => {
 				</Greetings>
 				<SearchForm onSubmit={searchUrl}>
 					<SearchBox>
-						<UrlInput ref={searchRef} name="url" placeholder="Search something..." />
+						<UrlInput name="url" placeholder="Search something..." />
 						<FunctionBox engine={engine} onClick={configModal}>
 							{engine === "google" && <FcGoogle />}
 							{engine === "bing" && <DiBingSmall />}
 							{engine === "yahoo" && <FaYahoo />}
 							{engine === "duckduckgo" && <SiDuckduckgo />}
-							{engine === "amazon" && <img src={amazon} width="20" height="20" alt="Amazon logo" />}
-							{engine === "reddit" && <FaReddit />}
-							{engine === "twitch" && <FaTwitch />}
-							{engine === "youtube" && <FaYoutube />}
-							{engine === "wikipedia" && <FcWikipedia />}
 						</FunctionBox>
 						<FunctionBox as="label" type="image" corner>
 							<MdSearch />

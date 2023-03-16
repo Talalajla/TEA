@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import ModalRoot from "../../components/modal/modalRoot";
 import Background from "../../layout/background";
 import { Content, MenuContainer } from "../../styles/home/main";
-import useFetch from "../../hooks/useFetch";
 import Days from "./components/days";
 import MenuBar from "../shared/menubar";
 import Chart from "chart.js/auto";
@@ -10,6 +9,8 @@ import { CategoryScale } from "chart.js";
 import LineChart from "./components/linechart";
 import zoomPlugin from "chartjs-plugin-zoom";
 import { ChartContainer } from "../../styles/weather/chart";
+import CurrentWeatherData from "./components/currentWeatherData";
+import { WeatherContent } from "../../styles/weather/main";
 
 Chart.register({CategoryScale, zoomPlugin});
 
@@ -96,42 +97,77 @@ const generateNextDays = (days) => {
 
 export default function Weather(props) {
 	const apikey = "0849360447e69eda07189e0b383ff858";
-	const [lat, setLat] = useState('50.68');
-	const [lon, setLon] = useState('17.93');
 	const [days, setDays] = useState(null);
 	const [daysInfo, setDaysInfo] = useState(null);
 	const [chartDays, setChartDays] = useState(null);
 	const [chartHours, setChartHours] = useState(null);
 	const [chartData, setChartData] = useState(null);
 	const [activeChart, setActiveChart] = useState(0); //today
-	const [unit, setUnit] = useState();
-	const [cityData, setCityData] = useState({
-		city: 'Warsaw',
-		lat: '52.2298',
-		lon: '21.0118',
-		state: '',
-		country: 'PL'
-	});
+	const [unit, setUnit] = useState(null);
+	const [cityData, setCityData] = useState(null);
+	const [currentData, setCurrentData] = useState([]);
+	const [status, setStatus] = useState("idle");
+	const [data, setData] = useState(null);
 
-	console.log(cityData);
-	const apiRequest = `https://api.openweathermap.org/data/2.5/forecast?lat=${cityData.lat}&lon=${cityData.lon}&units=${unit}&appid=${apikey}`;
-	const { data } = useFetch(apiRequest);
     useEffect(() => {
-		if (localStorage.getItem("tempunit")) setUnit(localStorage.getItem("tempunit"));
-		if (localStorage.getItem('TED_cityData')) setCityData(JSON.parse(localStorage.getItem('TED_cityData')));
-		// if (localStorage.getItem("cityLon")) setLon(localStorage.getItem("cityLon"));
-		// if (localStorage.getItem("cityLat")) setLat(localStorage.getItem("cityLat"));
-    }, []);
+		if (!unit && localStorage.getItem("tempunit")) setUnit(localStorage.getItem("tempunit"));
+		if (!cityData && localStorage.getItem('TED_cityData')) setCityData(JSON.parse(localStorage.getItem('TED_cityData')));
+
+		if (!cityData || !unit) return;
+
+		const fetchData = async () => {
+			setStatus("Fetching");
+
+			const apiRequestDays = `https://api.openweathermap.org/data/2.5/forecast?lat=${cityData.lat}&lon=${cityData.lon}&units=${unit}&appid=${apikey}`;
+			const apiRequestCurrent = `https://api.openweathermap.org/data/2.5/onecall?lat=${cityData.lat}&lon=${cityData.lon}&units=${unit}&appid=${apikey}`;
+
+
+			const responseCurrent = await fetch(apiRequestCurrent);
+			const dataCurrent = await responseCurrent.json();
+
+			console.log("ONECALL/WEATHER: ", apiRequestCurrent, dataCurrent);
+			setCurrentData(dataCurrent);
+
+			const responseDays = await fetch(apiRequestDays);
+			const dataDays = await responseDays.json();
+			setData(dataDays);
+
+			setStatus("Done");
+			console.log("first load");
+		};
+		if (status === "idle") fetchData();
+    }, [cityData, status, unit]);
+
+
+	// useEffect(() => {
+	// 	const interval = setInterval(async () => {
+	// 		setStatus("Updating");
+	// 		const responseCurrent = await fetch(apiRequestCurrent);
+	// 		const dataCurrent = await responseCurrent.json();
+	// 		setCurrentData(dataCurrent);
+
+	// 		const responseDays = await fetch(apiRequestDays);
+	// 		const dataDays = await responseDays.json();
+	// 		setData(dataDays);
+	// 		setStatus("Done");
+	// 		console.log("update (5min)");
+	// 	}, 1000 * 60 * 5);
+	// 	return () => {
+	// 		clearInterval(interval);
+	// 	};
+	// }, [apiRequestCurrent, apiRequestDays, cityData]);
+
+	console.log(data);
 
 	useEffect(() => {
-		if (data) setDays(groupData(data.list));
+		if (data && data.message === 0) setDays(groupData(data.list));
 	}, [data]);
 
 	useEffect(() => {
-		if (days) setChartDays(extractDaysData(days));
+		if (days && data.message === 0) setChartDays(extractDaysData(days));
 	}, [days]);
 	useEffect(() => {
-		if (days) setChartHours(extractHoursData(days));
+		if (days && data.message === 0) setChartHours(extractHoursData(days));
 	}, [days]);
 
 	useEffect(() => {
@@ -140,7 +176,7 @@ export default function Weather(props) {
 	}, [chartDays, chartHours, data])
 
 	useEffect(() => {
-		if (days) {
+		if (days && data.message === 0) {
 			setDaysInfo(generateNextDays(days));
 		}
 	}, [days]);
@@ -155,14 +191,15 @@ export default function Weather(props) {
 					toggleDM={props.toggleDM}
 				/>
 			</MenuContainer>
-			<Content>
+			<WeatherContent>
+				<CurrentWeatherData dayData={currentData} unit={unit} />
 				<Days days={days} daysInfo={daysInfo} changeDay={changeDay} />
 				<ChartContainer>
 					{
 						data && chartData && <LineChart title={daysInfo.dayName[activeChart]} unit={unit} chartDays={chartData.days[activeChart]} chartHours={chartData.hours[activeChart]} />
 					}
 				</ChartContainer>
-			</Content>
+			</WeatherContent>
 		</Background>
 	);
 }

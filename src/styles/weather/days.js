@@ -22,9 +22,10 @@ export const DayItem = styled.div`
     border-radius: 10px;
     align-items: center;
     cursor: pointer;
+    transition: background .2s;
 
     :hover {
-        background-color: ${({theme}) => theme.weatherCardsHov};
+        background: ${({theme}) => theme.weatherCardsHov};
     }
 `;
 
@@ -33,4 +34,45 @@ export const DayRadio = styled.input.attrs({type: 'radio'})`
     :checked + div {
         background: ${({theme}) => theme.background};
     }
+`;
+
+export const WeatherBox = styled.div`
+    display: flex;
+    flex-direction: column;
+    color: #ffffff;
+    width: 100%;
+    align-items: center;
+    font-size: 20px;
+    padding-bottom: 50px;
+`;
+
+export const WeatherRow = styled.div`
+    display: flex;
+    gap: 10px;
+    font-size: 1em;
+    justify-content: center;
+    align-items: center;
+    text-transform: capitalize;    
+`;
+
+export const WeatherCurrentDescription = styled(WeatherRow)`
+    padding-bottom: 20px;
+    font-size: 1.15em;
+`;
+
+export const WeatherRowOthers = styled.div`
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    font-size: .75em;
+    
+    div {
+        padding: 5px 15px;
+    }
+`;
+
+export const WeatherCurrentTemp = styled.p`
+    font-size: 3em;
+    font-weight: 200;
+    margin: 0;
 `;

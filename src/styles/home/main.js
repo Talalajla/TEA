@@ -407,6 +407,9 @@ export const FunctionBox = styled.div`
 				if (engine === "bing") return "#0C8484";
 				else if (engine === "yahoo") return "#410093";
 				else if (engine === "duckduckgo") return "#F05435";
+				else if (engine === "reddit") return "#f24102";
+				else if (engine === "twitch") return "#9146ff";
+				else if (engine === "youtube") return "#ff0000";
 			}};
 		`}
 

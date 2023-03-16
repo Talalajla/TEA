@@ -132,7 +132,12 @@ export const ModalLabel = styled.label`
 				color: ${() => {
 					if (type === "bing") return "#0C8484";
 					else if (type === "yahoo") return "#410093";
-					else if (type === "duck") return "#F05435";
+					else if (type === "duckduckgo") return "#F05435";
+					else if (type === "amazon") return "#ff9900";
+					else if (type === "reddit") return "#f24102";
+					else if (type === "twitch") return "#9146ff";
+					else if (type === "youtube") return "#ff0000";
+					else if (type === "wikipedia") return "#000000";
 				}};
 			}
 
@@ -147,7 +152,12 @@ export const ModalLabel = styled.label`
 				color: ${() => {
 					if (type === "bing") return "#0C8484";
 					else if (type === "yahoo") return "#410093";
-					else if (type === "duck") return "#F05435";
+					else if (type === "duckduckgo") return "#F05435";
+					else if (type === "amazon") return "#ff9900";
+					else if (type === "reddit") return "#f24102";
+					else if (type === "twitch") return "#9146ff";
+					else if (type === "youtube") return "#ff0000";
+					else if (type === "wikipedia") return "#000000";
 				}};
 			}
 		`}

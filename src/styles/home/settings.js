@@ -6,13 +6,13 @@ export const SelectContainer = styled.div`
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	gap: 10px;
+	flex-wrap: wrap;
 	border-radius: 25px;
 	background: ${({ theme }) => theme.background2};
 	color: ${({ theme }) => theme.background};
 	font-size: 30px;
 	> * {
-		flex: 1;
+		width: 33%;
 		display: flex;
 		justify-content: center;
 		align-items: center;
