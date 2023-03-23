@@ -24,6 +24,10 @@ export const DayItem = styled.div`
     cursor: pointer;
     transition: background .2s;
 
+    img {
+        filter: drop-shadow(0 0 1px #000);
+    }
+
     :hover {
         background: ${({theme}) => theme.weatherCardsHov};
     }
@@ -71,8 +75,26 @@ export const WeatherRowOthers = styled.div`
     }
 `;
 
-export const WeatherCurrentTemp = styled.p`
-    font-size: 3em;
+export const WeatherCurrentTemp = styled.div`
+    font-size: 3.5em;
     font-weight: 200;
     margin: 0;
+    display: flex;
+    >span {
+        font-size: .6em;
+    }
+    div {
+        padding-left: 10px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+`;
+
+export const WeatherCurrentTempVal = styled.span`
+    font-size: ${({active}) => active ? '20px' : '15px'};
+    padding: 2px 0;
+    font-weight: ${({active}) => active ? 600 : 300};
+    color: ${({active}) => active ? '#fff' : '#d9e0f2'};
+    cursor: pointer;
 `;

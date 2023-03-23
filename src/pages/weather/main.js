@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import ModalRoot from "../../components/modal/modalRoot";
 import Background from "../../layout/background";
 import { Content, MenuContainer } from "../../styles/home/main";
@@ -11,6 +11,9 @@ import zoomPlugin from "chartjs-plugin-zoom";
 import { ChartContainer } from "../../styles/weather/chart";
 import CurrentWeatherData from "./components/currentWeatherData";
 import { WeatherContent } from "../../styles/weather/main";
+import { WearherCitiesList, WeatherCitiesItem, WeatherCitiesItemAddBtn, WeatherCitiesItemData, WeatherCitiesList, WeatherSearch, WeatherSearchBox, WeatherSearchBtn, WeatherSearchLabel } from "./components/search";
+import { AiOutlinePlusCircle } from "react-icons/ai";
+import { useClickAway } from "react-use";
 
 Chart.register({CategoryScale, zoomPlugin});
 
@@ -108,6 +111,10 @@ export default function Weather(props) {
 	const [currentData, setCurrentData] = useState([]);
 	const [status, setStatus] = useState("idle");
 	const [data, setData] = useState(null);
+	const [searchedCities, setSearchedCities] = useState([]);
+	const SearchRef = useRef('');
+
+	useClickAway(SearchRef, () => setSearchedCities([]), ["mousedown"]);
 
     useEffect(() => {
 		if (!unit && localStorage.getItem("tempunit")) setUnit(localStorage.getItem("tempunit"));
@@ -120,7 +127,6 @@ export default function Weather(props) {
 
 			const apiRequestDays = `https://api.openweathermap.org/data/2.5/forecast?lat=${cityData.lat}&lon=${cityData.lon}&units=${unit}&appid=${apikey}`;
 			const apiRequestCurrent = `https://api.openweathermap.org/data/2.5/onecall?lat=${cityData.lat}&lon=${cityData.lon}&units=${unit}&appid=${apikey}`;
-
 
 			const responseCurrent = await fetch(apiRequestCurrent);
 			const dataCurrent = await responseCurrent.json();
@@ -138,26 +144,13 @@ export default function Weather(props) {
 		if (status === "idle") fetchData();
     }, [cityData, status, unit]);
 
-
-	// useEffect(() => {
-	// 	const interval = setInterval(async () => {
-	// 		setStatus("Updating");
-	// 		const responseCurrent = await fetch(apiRequestCurrent);
-	// 		const dataCurrent = await responseCurrent.json();
-	// 		setCurrentData(dataCurrent);
-
-	// 		const responseDays = await fetch(apiRequestDays);
-	// 		const dataDays = await responseDays.json();
-	// 		setData(dataDays);
-	// 		setStatus("Done");
-	// 		console.log("update (5min)");
-	// 	}, 1000 * 60 * 5);
-	// 	return () => {
-	// 		clearInterval(interval);
-	// 	};
-	// }, [apiRequestCurrent, apiRequestDays, cityData]);
-
-	console.log(data);
+	const changeUnit = (newUnit) => {
+		if (newUnit !== unit) {
+			localStorage.setItem('tempunit', newUnit);
+			setUnit(newUnit);
+			setStatus('idle');
+		}
+	}
 
 	useEffect(() => {
 		if (data && data.message === 0) setDays(groupData(data.list));
@@ -183,6 +176,33 @@ export default function Weather(props) {
 
 	const changeDay = (e) => setActiveChart(e.currentTarget.value);
 
+	const searchForCities = (e) => {
+		e.preventDefault();
+		const city = e.target.nextElementSibling.value;
+		if (city === "" || !city) return;
+
+		fetch(`http://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=5&appid=${apikey}`)
+			.then(res => res.json())
+			.then(data => setSearchedCities(data));
+	}
+
+	const changeCity = (e) => {
+		const index = e.currentTarget.dataset.val;
+		console.log(searchedCities, index);
+		const newcity = searchedCities[index];
+		const cityObj = {
+			city: newcity.name,
+			country: newcity.country,
+			state: newcity.state,
+			lat: newcity.lat,
+			lon: newcity.lon
+		}
+		localStorage.setItem('TED_cityData', JSON.stringify(cityObj));
+		setSearchedCities([]);
+		SearchRef.current.querySelector('input[type=search]').value = '';
+		setCityData(cityObj);
+		setStatus('idle')
+	}
 	return (
 		<Background>
 			<ModalRoot />
@@ -192,7 +212,25 @@ export default function Weather(props) {
 				/>
 			</MenuContainer>
 			<WeatherContent>
-				<CurrentWeatherData dayData={currentData} unit={unit} />
+				<CurrentWeatherData dayData={currentData} cityData={cityData} unit={unit} changeUnit={changeUnit} />
+				<WeatherSearchBox ref={SearchRef}>
+					<WeatherSearchLabel>
+						<WeatherSearchBtn onClick={searchForCities} value="Search" />
+						<WeatherSearch placeholder="Change city..." />
+					</WeatherSearchLabel>
+						{searchedCities.length !== 0 && (
+							<WeatherCitiesList>
+								{searchedCities.map((item, index) => (
+									<WeatherCitiesItem key={index} data-val={index} onClick={changeCity}>
+										<WeatherCitiesItemData>
+											<strong>{item.name}, {item.country}</strong><span>({item.state})</span>
+										</WeatherCitiesItemData>
+										<AiOutlinePlusCircle />
+									</WeatherCitiesItem>	
+								))}
+							</WeatherCitiesList>
+						)}
+				</WeatherSearchBox>
 				<Days days={days} daysInfo={daysInfo} changeDay={changeDay} />
 				<ChartContainer>
 					{
