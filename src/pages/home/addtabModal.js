@@ -27,7 +27,7 @@ const AddtabModal = (props) => {
 	};
 
 	return (
-		<Modal>
+		<Modal close={props.close}>
 			<ModalPartHeader>Add shortcut card</ModalPartHeader>
 			<ModalPartBody>
 				<ModalContainer as="form" ref={form}>

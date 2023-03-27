@@ -39,7 +39,7 @@ const EdittabModal = (props) => {
 	};
 
 	return (
-		<Modal>
+		<Modal close={props.close}>
 			<ModalPartHeader>Edit shortcut card</ModalPartHeader>
 			<ModalPartBody>
 				<ModalContainer flex col as="form" ref={form}>

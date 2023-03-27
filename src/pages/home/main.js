@@ -41,6 +41,7 @@ import Cards from "./parts/cards";
 import Background from "../../layout/background";
 import { ModalContainer } from "../../styles/modal/main";
 import MenuBar from "../shared/menubar";
+import { Link } from "react-router-dom";
 
 const Home = (props) => {
 	const [cityData, setCityData] = useState(null);
@@ -272,8 +273,8 @@ const Home = (props) => {
 								closeMenu={() => openMenu(false)}
 								widgetModal={() => openWidget(true)}
 							/>
-							<WeatherMenuInfo>{cityData.city}</WeatherMenuInfo>
-							<WeatherMenuInfo>
+							<WeatherMenuInfo as={Link} to="/weather">{cityData.city}</WeatherMenuInfo>
+							<WeatherMenuInfo as={Link} to="/weather">
 								{data.current.temp}
 								<sup>
 									{unit === "metric" ? "°C" : null}

@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import ModalRoot from "../../components/modal/modalRoot";
 import Background from "../../layout/background";
-import { Content, MenuContainer } from "../../styles/home/main";
+import { MenuContainer } from "../../styles/home/main";
 import Days from "./components/days";
 import MenuBar from "../shared/menubar";
 import Chart from "chart.js/auto";
@@ -11,9 +11,11 @@ import zoomPlugin from "chartjs-plugin-zoom";
 import { ChartContainer } from "../../styles/weather/chart";
 import CurrentWeatherData from "./components/currentWeatherData";
 import { WeatherContent } from "../../styles/weather/main";
-import { WearherCitiesList, WeatherCitiesItem, WeatherCitiesItemAddBtn, WeatherCitiesItemData, WeatherCitiesList, WeatherSearch, WeatherSearchBox, WeatherSearchBtn, WeatherSearchLabel } from "./components/search";
+import { WeatherCitiesItem, WeatherCitiesItemData, WeatherCitiesList, WeatherSearch, WeatherSearchBox, WeatherSearchBtn, WeatherSearchLabel } from "./components/search";
 import { AiOutlinePlusCircle } from "react-icons/ai";
 import { useClickAway } from "react-use";
+import { WeatherRecentDay, WeatherRecentDays } from "../../styles/weather/days";
+import { figureRecentCitiesArray } from "../shared/helper/recentCities";
 
 Chart.register({CategoryScale, zoomPlugin});
 
@@ -58,9 +60,17 @@ const extractHoursData = weatherArr => {
 	weatherArr.map(interval => interval.dt_txt)
 	return hrsArray;
 };
+const extractIconsData = weatherArr => {
+	const iconsArray = [];
+	for(var i=0;i<5;i++) {
+		const newArrayLine = weatherArr[i].map((interval) => interval.weather[0].icon);
+		iconsArray.push(newArrayLine)
+	}
+	return iconsArray;
+}
 
-const fillChartWithData = (days, hours) => {
-	const chartDataObject = { days, hours }
+const fillChartWithData = (days, hours, icons) => {
+	const chartDataObject = { days, hours, icons }
 	return chartDataObject;
 }
 
@@ -103,6 +113,7 @@ export default function Weather(props) {
 	const [days, setDays] = useState(null);
 	const [daysInfo, setDaysInfo] = useState(null);
 	const [chartDays, setChartDays] = useState(null);
+	const [chartIcons, setChartIcons] = useState(null);
 	const [chartHours, setChartHours] = useState(null);
 	const [chartData, setChartData] = useState(null);
 	const [activeChart, setActiveChart] = useState(0); //today
@@ -112,6 +123,7 @@ export default function Weather(props) {
 	const [status, setStatus] = useState("idle");
 	const [data, setData] = useState(null);
 	const [searchedCities, setSearchedCities] = useState([]);
+	const [recentCities, setRecentCities] = useState(null);
 	const SearchRef = useRef('');
 
 	useClickAway(SearchRef, () => setSearchedCities([]), ["mousedown"]);
@@ -119,6 +131,7 @@ export default function Weather(props) {
     useEffect(() => {
 		if (!unit && localStorage.getItem("tempunit")) setUnit(localStorage.getItem("tempunit"));
 		if (!cityData && localStorage.getItem('TED_cityData')) setCityData(JSON.parse(localStorage.getItem('TED_cityData')));
+		if (!recentCities && localStorage.getItem('TED_recentCities')) setRecentCities(JSON.parse(localStorage.getItem('TED_recentCities')));
 
 		if (!cityData || !unit) return;
 
@@ -139,10 +152,9 @@ export default function Weather(props) {
 			setData(dataDays);
 
 			setStatus("Done");
-			console.log("first load");
 		};
 		if (status === "idle") fetchData();
-    }, [cityData, status, unit]);
+    }, [cityData, recentCities, status, unit]);
 
 	const changeUnit = (newUnit) => {
 		if (newUnit !== unit) {
@@ -162,11 +174,14 @@ export default function Weather(props) {
 	useEffect(() => {
 		if (days && data.message === 0) setChartHours(extractHoursData(days));
 	}, [days]);
+	useEffect(() => {
+		if (days && data.message === 0) setChartIcons(extractIconsData(days));
+	}, [days]);
 
 	useEffect(() => {
 		if (chartDays && chartHours)
-			setChartData(fillChartWithData(chartDays, chartHours));
-	}, [chartDays, chartHours, data])
+			setChartData(fillChartWithData(chartDays, chartHours, chartIcons));
+	}, [chartDays, chartHours, chartIcons, data])
 
 	useEffect(() => {
 		if (days && data.message === 0) {
@@ -197,11 +212,28 @@ export default function Weather(props) {
 			lat: newcity.lat,
 			lon: newcity.lon
 		}
+
+		const recentCitiesArray = figureRecentCitiesArray(cityObj);
+
+		localStorage.setItem('TED_recentCities', JSON.stringify(recentCitiesArray));
+		setRecentCities(recentCitiesArray);
 		localStorage.setItem('TED_cityData', JSON.stringify(cityObj));
 		setSearchedCities([]);
 		SearchRef.current.querySelector('input[type=search]').value = '';
 		setCityData(cityObj);
 		setStatus('idle')
+	}
+	
+	const searchFromRecent = (recentCity) => {
+		const newCityObject = {
+			city: recentCity.city,
+			country: recentCity.country,
+			state: recentCity.state,
+			lat: recentCity.lat,
+			lon: recentCity.lon
+		}
+		setCityData(newCityObject);
+		setStatus('idle');
 	}
 	return (
 		<Background>
@@ -213,6 +245,12 @@ export default function Weather(props) {
 			</MenuContainer>
 			<WeatherContent>
 				<CurrentWeatherData dayData={currentData} cityData={cityData} unit={unit} changeUnit={changeUnit} />
+				<WeatherRecentDays>
+					{
+						recentCities &&
+						recentCities.map((item, key) => <WeatherRecentDay key={key} onClick={() => searchFromRecent(item)}>{item.city}</WeatherRecentDay>)
+					}
+				</WeatherRecentDays>
 				<WeatherSearchBox ref={SearchRef}>
 					<WeatherSearchLabel>
 						<WeatherSearchBtn onClick={searchForCities} value="Search" />
@@ -234,7 +272,7 @@ export default function Weather(props) {
 				<Days days={days} daysInfo={daysInfo} changeDay={changeDay} />
 				<ChartContainer>
 					{
-						data && chartData && <LineChart title={daysInfo.dayName[activeChart]} unit={unit} chartDays={chartData.days[activeChart]} chartHours={chartData.hours[activeChart]} />
+						data && chartData && <LineChart title={daysInfo.dayName[activeChart]} unit={unit} chartDays={chartData.days[activeChart]} chartIcons={chartData.icons[activeChart]} chartHours={chartData.hours[activeChart]} />
 					}
 				</ChartContainer>
 			</WeatherContent>

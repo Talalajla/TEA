@@ -16,13 +16,14 @@ export const DayItem = styled.div`
     flex-direction: column;
     gap: 5px;
     font-size: 14px;
-    padding: 30px;
+    padding: 30px 10px;
     background-color: ${({theme}) => theme.weatherCards};
     color: ${({theme}) => theme.weatherCardsTxt};
     border-radius: 10px;
     align-items: center;
     cursor: pointer;
     transition: background .2s;
+    min-width: 150px;
 
     img {
         filter: drop-shadow(0 0 1px #000);
@@ -97,4 +98,31 @@ export const WeatherCurrentTempVal = styled.span`
     font-weight: ${({active}) => active ? 600 : 300};
     color: ${({active}) => active ? '#fff' : '#d9e0f2'};
     cursor: pointer;
+`;
+
+export const WeatherRecentDays = styled.div`
+    display: flex;
+    padding-bottom: 30px;
+    text-align: center;
+`;
+export const WeatherRecentDay = styled.div`
+    padding: 10px 15px;   
+    background-color: ${({theme}) => theme.weatherCards};
+    color: ${({theme}) => theme.weatherCardsTxt};
+    flex: 1;
+    max-width: 33.33%;
+    border-radius: 7.5px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: background .2s;
+
+    :not(:first-of-type) {
+        margin-left: 5px;
+    }
+
+    :hover {
+        background: ${({theme}) => theme.background};
+    }
 `;

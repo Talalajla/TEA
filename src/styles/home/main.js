@@ -283,6 +283,7 @@ export const MenuIcon = styled.img`
 export const WeatherMenuInfo = styled.div`
 	font-size: 20px;
 	padding: 0 5px;
+	color: #fff;
 
 	@media (max-width: 500px) {
 		font-size: 14px;

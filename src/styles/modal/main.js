@@ -1,7 +1,8 @@
 import styled from "styled-components";
 import { css } from "styled-components";
 
-export const ModalSection = styled.div`
+export const ModalSection = styled.div`	
+	transition: background-color .15s;
 	${({ isRoot }) =>
 		isRoot &&
 		css`
@@ -10,7 +11,7 @@ export const ModalSection = styled.div`
 			width: 100vw;
 			height: 100vh;
 			z-index: 100;
-			background-color: rgba(0, 0, 0, 0.1);
+			background-color: rgba(0, 0, 0, 0.2);
 			display: flex;
 			justify-content: center;
 			align-items: center;

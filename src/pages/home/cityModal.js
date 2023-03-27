@@ -68,7 +68,7 @@ const CityModal = (props) => {
 	};
 
 	return (
-		<Modal>
+		<Modal close={props.close}>
 			<ModalPartHeader>Change your city</ModalPartHeader>
 			<ModalPartBody>
 				<ModalContainer flex col gap="20">

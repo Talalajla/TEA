@@ -33,7 +33,7 @@ const Settings = (props) => {
 	};
 
 	return (
-		<Modal>
+		<Modal close={props.close}>
 			<ModalPartHeader>Choose your search engine:</ModalPartHeader>
 			<ModalPartBody>
 				<ModalContainer flex col as="form" ref={form}>

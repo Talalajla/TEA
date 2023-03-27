@@ -3,10 +3,8 @@ import { WeatherBox, WeatherCurrentDescription, WeatherCurrentTemp, WeatherCurre
 import { UnitFromText } from '../../shared/helper/unit';
 
 const CurrentWeatherData = ({dayData, unit, changeUnit, cityData}) => {
-
-    console.log(dayData, cityData);
-
     if (!dayData.current) return;
+
     const now = dayData.current;
     const details = now.weather[0];
 
@@ -18,7 +16,7 @@ const CurrentWeatherData = ({dayData, unit, changeUnit, cityData}) => {
                 <WeatherRow>{`${cityData.city}, ${cityData.country}`}</WeatherRow>
                 <WeatherRow>
                     <span>
-                        <img width='100' src={`https://openweathermap.org/img/wn/${details.icon}@2x.png`} />
+                        <img width='100' src={`https://openweathermap.org/img/wn/${details.icon}@2x.png`} alt="Weather icon" />
                     </span>
                     <WeatherCurrentTemp>
                         {now.temp} 

@@ -3,7 +3,7 @@ import { Line } from "react-chartjs-2";
 import { UnitFromText } from '../../shared/helper/unit';
 import { externalTooltipHandler } from './tooltip';
 
-const LineChart = ({chartDays, chartHours, unit, title}) => {
+const LineChart = ({chartDays, chartHours, chartIcons, unit, title}) => {
     return (
     <div className='chart-container'>
         <h2 style={{textAlign: 'center'}}>Daily weather chart</h2>
@@ -16,7 +16,7 @@ const LineChart = ({chartDays, chartHours, unit, title}) => {
                     borderColor: 'rgb(53, 162, 235)',
                     backgroundColor: 'rgba(53, 162, 235, 0.5)',
                 }],
-                labels: chartHours
+                labels: chartHours,
             }}
             options={{
                 interaction: {
@@ -26,8 +26,22 @@ const LineChart = ({chartDays, chartHours, unit, title}) => {
                 plugins: {
                     tooltip: {
                         enabled: false,
-                        position: 'nearest',
-                        external: externalTooltipHandler
+                        position: 'nearest',                    
+                        titleMarginBottom: 10,
+                        external: externalTooltipHandler,
+                        callbacks: {
+                            title: function(context) {
+                                const dataIndex = context[0].dataIndex;
+                                const icon = chartIcons[dataIndex];
+                                const hour = chartHours[dataIndex];
+                                return `${hour} ${icon}`;
+                            },
+                            label: function(context) {
+                                const label = context.dataset.label || '';
+                                const value = context.formattedValue;
+                                return `${label}: ${value}`;
+                            }
+                        }
                     },
                     legend: {
                         display: false
