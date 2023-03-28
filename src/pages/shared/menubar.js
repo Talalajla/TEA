@@ -5,6 +5,7 @@ import { BiCurrentLocation } from 'react-icons/bi';
 import { BsCloudSun } from "react-icons/bs";
 import { HiMenuAlt4 } from 'react-icons/hi';
 import { RiSettings4Fill } from 'react-icons/ri';
+import { MdPhotoLibrary } from 'react-icons/md';
 import { useClickAway } from 'react-use';
 import { MenuMoreWeatherInfo, MenuRow } from '../../styles/home/main';
 import { Link } from 'react-router-dom';
@@ -36,6 +37,10 @@ const MenuBar = (props) => {
                 <MenuRow as={Link} to="/weather">
                     <BsCloudSun />
                     <span>Weather for next days</span>
+                </MenuRow>
+                <MenuRow onClick={props.changeBackground}>
+                    <MdPhotoLibrary />
+                    <span>Change background</span>
                 </MenuRow>
                 <MenuRow onClick={props.configModal}>
                     <RiSettings4Fill />

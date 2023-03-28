@@ -19,13 +19,20 @@ export const ModalSection = styled.div`
 `;
 export const ModalBox = styled.div`
 	display: block;
+	overflow: auto;
+	${({ bgGrid }) => 
+		bgGrid &&
+		css`
+			display: grid;
+			grid-template-rows: 60px 1fr 60px;
+			overflow: scroll;
+		`}
 	background: ${({ theme }) => theme.background};
 	border: 1px solid ${({ theme }) => theme.background2};
 	color: ${({ theme }) => theme.text};
 	padding: 20px;
 	border-radius: 10px;
 	min-width: 400px;
-	overflow: auto;
 	max-height: 95%;
 	margin: auto;
 	position: relative;
@@ -42,6 +49,11 @@ export const ModalHeader = styled.div`
 export const ModalBody = styled.div`
 	display: flex;
 	padding: 20px 0;
+	${({bgOverflow}) => 
+		bgOverflow && css`
+			overflow: scroll;
+			height: 100%;
+		`};
 `;
 export const ModalFooter = styled.div`
 	padding: 10px 0;
@@ -223,4 +235,40 @@ export const CornerClose = styled.div`
 	top: 10px;
 	font-size: 30px;
 	color: ${({ theme }) => theme.text};
+`;
+export const ModalBackgroundCards = styled.div`
+	display: flex;
+	flex-wrap: wrap;
+	gap: 20px;
+	max-width: calc(20px + 20px + 150px + 20px + 150px + 20px + 150px);
+	padding: 0 20px;
+	>figure {
+		max-width: 150px;
+		border-radius: 15px;
+		position: relative;
+		width: 150px;
+		margin: 0;
+		cursor: pointer;
+		>img {
+			border: 1px solid rgb(0 0 0 / .5);
+			border-radius: 15px;
+			width: 100%;
+		}
+		>figcaption {
+			padding: 5px 0;
+			text-align: center;
+		}
+	}
+	@media (max-width: 768px) {
+		max-width: calc(20px + 20px + 150px + 150px + 20px);
+	}
+	@media(max-width: 500px) {
+		max-width: unset;
+		justify-content: center;
+		> figure {
+			max-width: 100%;
+			width: 100%;
+			height: auto;
+		}
+	}
 `;

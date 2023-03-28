@@ -34,7 +34,7 @@ const LineChart = ({chartDays, chartHours, chartIcons, unit, title}) => {
                                 const dataIndex = context[0].dataIndex;
                                 const icon = chartIcons[dataIndex];
                                 const hour = chartHours[dataIndex];
-                                return `${hour} ${icon}`;
+                                return `${hour}`;
                             },
                             label: function(context) {
                                 const label = context.dataset.label || '';

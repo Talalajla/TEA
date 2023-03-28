@@ -42,6 +42,7 @@ import Background from "../../layout/background";
 import { ModalContainer } from "../../styles/modal/main";
 import MenuBar from "../shared/menubar";
 import { Link } from "react-router-dom";
+import BackgroundModal from "./changeBackgroundModal";
 
 const Home = (props) => {
 	const [cityData, setCityData] = useState(null);
@@ -216,9 +217,9 @@ const Home = (props) => {
 	const addModal = () => ModalService.open(AddtabModal);
 	const addEditModal = () => ModalService.open(EdittabModal);
 	const changeCity = () => ModalService.open(CityModal);
+	const changeBackground = () => ModalService.open(BackgroundModal);
 	const configModal = () => ModalService.open(ConfigModal);
 	const openWidget = () => ModalService.open(WidgetMobile);
-
 	const refreshCards = () => setRes({});
 	const refreshConfig = () => {
 		setEngine(localStorage.getItem("searchengine"));
@@ -227,22 +228,6 @@ const Home = (props) => {
 	const refreshData = () => {
 		setCityData(JSON.parse(localStorage.getItem('TED_cityData')));
 		setStatus('reload');
-		// const unitRequest = localStorage.getItem("tempunit");
-		// if (cityData !== JSON.parse(localStorage.getItem('TED_cityData')))
-		// else {
-		// 	const fetchData = async () => {
-		// 		setStatus("Fetching");
-		// 		console.log(cityData);
-		// 		const response = await fetch(
-		// 			`https://api.openweathermap.org/data/2.5/onecall?lat=${cityData.lat}&lon=${cityData.lon}&units=${unitRequest}&appid=${apikey}`
-		// 		);
-		// 		const data = await response.json();
-		// 		setData(data);
-		// 		etStatus("Done");
-		// 		console.log("refresh data");
-		// 	};
-		// 	fetchData();
-		// }
 	};
 	return (
 		<Background>
@@ -253,6 +238,7 @@ const Home = (props) => {
 						toggleDM={props.toggleDM} 
 						addModal={addModal}
 						changeCity={changeCity}
+						changeBackground={changeBackground}
 						configModal={configModal}
 						page="landing"
 					/>
