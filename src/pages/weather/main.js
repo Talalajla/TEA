@@ -16,6 +16,9 @@ import { AiOutlinePlusCircle } from "react-icons/ai";
 import { useClickAway } from "react-use";
 import { WeatherRecentDay, WeatherRecentDays } from "../../styles/weather/days";
 import { figureRecentCitiesArray } from "../shared/helper/recentCities";
+import ModalService from "../../components/modal/services/modalService";
+import BackgroundModal from "../home/changeBackgroundModal";
+import Shortcuts from "../shared/shortcutsModal";
 
 Chart.register({CategoryScale, zoomPlugin});
 
@@ -31,12 +34,10 @@ const groupData = (weatherArr) => {
 		if (newArr.length < 5)
 			newArr.push(day);
 	}
-	console.log(newArr);
 	for(var i=0; i<newArr.length; i++) {
 		let dataToClone;
 		if (i < newArr.length - 1)
 			dataToClone = newArr[i+1][0];
-		// console.log(dataToClone);
 		if (dataToClone)
 			newArr[i].push(dataToClone);
 	}
@@ -87,7 +88,6 @@ const generateNextDays = (days) => {
 	if (firstIntervalHour === 0) {
 		const today = new Date();
 		const dateTemplate = `${today.getFullYear()}-${today.getMonth()+1 < 10 ? '0' + (today.getMonth()+1) : today.getMonth()+1}-${today.getDate() < 10 ? '0' + today.getDate() : today.getDate()}`;
-		console.log(dateTemplate);
 		if (!+days[0][0].dt_txt.includes(dateTemplate))
 			moveDays1step=1; 
 	}
@@ -126,12 +126,47 @@ export default function Weather(props) {
 	const [recentCities, setRecentCities] = useState(null);
 	const SearchRef = useRef('');
 
+	const [backgroundType, setBackgroundType] = useState(null);
+	const [backgroundNumber, setBackgroundNumber] = useState(null);
+
 	useClickAway(SearchRef, () => setSearchedCities([]), ["mousedown"]);
 
     useEffect(() => {
-		if (!unit && localStorage.getItem("tempunit")) setUnit(localStorage.getItem("tempunit"));
-		if (!cityData && localStorage.getItem('TED_cityData')) setCityData(JSON.parse(localStorage.getItem('TED_cityData')));
-		if (!recentCities && localStorage.getItem('TED_recentCities')) setRecentCities(JSON.parse(localStorage.getItem('TED_recentCities')));
+	if (!recentCities && localStorage.getItem('TED_recentCities')) 
+		setRecentCities(JSON.parse(localStorage.getItem('TED_recentCities')));
+		
+	if(!cityData)
+		if (localStorage.getItem("TED_cityData")) 
+			setCityData(JSON.parse(localStorage.getItem("TED_cityData")));
+		else {
+			const baseCityData = {"city":"Warsaw","country":"PL","state":"Masovian Voivodeship","lat":52.2319581,"lon":21.0067249};
+			localStorage.setItem("TED_cityData", JSON.stringify(baseCityData));
+			setCityData(baseCityData);
+		}
+	if (!unit)
+		if (localStorage.getItem("tempunit")) 
+			setUnit(localStorage.getItem("tempunit"));
+		else {
+			const baseUnit = 'metric';
+			localStorage.setItem('tempunit', baseUnit);
+			setUnit(baseUnit);
+		}
+	if (!backgroundType) 
+		if(localStorage.getItem("TED_backgroundType")) 
+			setBackgroundType(localStorage.getItem("TED_backgroundType"));
+		else {
+			const baseBgType = 'photo';
+			localStorage.setItem('TED_backgroundType', baseBgType);
+			setBackgroundType(baseBgType);
+		}
+	if (backgroundType === "photo")
+		if (localStorage.getItem("TED_backgroundNumber"))
+			 setBackgroundNumber(localStorage.getItem("TED_backgroundNumber"));
+		else {
+			const baseBgNum = 8;
+			localStorage.setItem('TED_backgroundNumber', baseBgNum);
+			setBackgroundNumber(baseBgNum);
+		}
 
 		if (!cityData || !unit) return;
 
@@ -144,7 +179,6 @@ export default function Weather(props) {
 			const responseCurrent = await fetch(apiRequestCurrent);
 			const dataCurrent = await responseCurrent.json();
 
-			console.log("ONECALL/WEATHER: ", apiRequestCurrent, dataCurrent);
 			setCurrentData(dataCurrent);
 
 			const responseDays = await fetch(apiRequestDays);
@@ -203,7 +237,6 @@ export default function Weather(props) {
 
 	const changeCity = (e) => {
 		const index = e.currentTarget.dataset.val;
-		console.log(searchedCities, index);
 		const newcity = searchedCities[index];
 		const cityObj = {
 			city: newcity.name,
@@ -235,12 +268,31 @@ export default function Weather(props) {
 		setCityData(newCityObject);
 		setStatus('idle');
 	}
+	const changeBackgroundToImg = (e) => {
+		const backgroundNumber = e.currentTarget.children[0].dataset.index;
+		localStorage.setItem("TED_backgroundType", 'photo');
+		localStorage.setItem("TED_backgroundNumber", backgroundNumber);
+		setBackgroundType('photo');
+		setBackgroundNumber(backgroundNumber)
+	}
+	const changeBackgroundToLapse = () => {
+		localStorage.setItem("TED_backgroundType", 'lapse');
+		localStorage.setItem("TED_backgroundNumber", '');
+		setBackgroundType('lapse');
+		setBackgroundNumber(null);
+	}
+
+	const changeBackground = () => ModalService.open(BackgroundModal);
+	const showShortcuts = () => ModalService.open(Shortcuts);
+
 	return (
-		<Background>
-			<ModalRoot />
+		<Background bgType={backgroundType} bgNumber={backgroundNumber}>
+			<ModalRoot changeBackgroundToImg={changeBackgroundToImg} changeBackgroundToLapse={changeBackgroundToLapse} />
 			<MenuContainer>
 				<MenuBar 
 					toggleDM={props.toggleDM}
+					changeBackground={changeBackground}
+					showShortcuts={showShortcuts}
 				/>
 			</MenuContainer>
 			<WeatherContent>

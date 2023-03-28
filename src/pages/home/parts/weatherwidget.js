@@ -33,7 +33,6 @@ export default function WeatherWidget(props) {
 		else if (uvNum > 5 && uvNum <= 7) setUV("High");
 		else if (uvNum > 7 && uvNum <= 10) setUV("Very high!");
 		else setUV("Extreme high!!!");
-		console.log("figure uv", uvNum);
 	}, [data]);
 
 	useClickAway(menuRef, () => props.closeMenu(), ["mouseup"]);

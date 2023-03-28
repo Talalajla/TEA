@@ -43,6 +43,7 @@ import { ModalContainer } from "../../styles/modal/main";
 import MenuBar from "../shared/menubar";
 import { Link } from "react-router-dom";
 import BackgroundModal from "./changeBackgroundModal";
+import Shortcuts from "../shared/shortcutsModal";
 
 const Home = (props) => {
 	const [cityData, setCityData] = useState(null);
@@ -64,21 +65,58 @@ const Home = (props) => {
 	const [icon, setIcon] = useState(null);
 	const [sunrise, setSunrise] = useState("");
 	const [sunset, setSunset] = useState("");
+	
+	const [backgroundType, setBackgroundType] = useState(null);
+	const [backgroundNumber, setBackgroundNumber] = useState(null);
 
 	const searchRef = useRef(null);
 
-	const apikey = "c60621f6b01ac75d9cb4f8afef300fdc";
-	// const apikey = "0849360447e69eda07189e0b383ff858";
+	const apikey = "0849360447e69eda07189e0b383ff858";
 
 	useClickAway(alertsRef, () => openAlerts(false), ["mouseup"]);
 
 	useEffect(() => {
-		if (!cityData && localStorage.getItem("TED_cityData")) setCityData(JSON.parse(localStorage.getItem("TED_cityData")));
-		if (!engine && localStorage.getItem("searchengine")) setEngine(localStorage.getItem("searchengine"));
-		if (!unit && localStorage.getItem("tempunit")) setUnit(localStorage.getItem("tempunit"));
+		if(!cityData)
+			if (localStorage.getItem("TED_cityData")) 
+				setCityData(JSON.parse(localStorage.getItem("TED_cityData")));
+			else {
+				const baseCityData = {"city":"Warsaw","country":"PL","state":"Masovian Voivodeship","lat":52.2319581,"lon":21.0067249};
+				localStorage.setItem("TED_cityData", JSON.stringify(baseCityData));
+				setCityData(baseCityData);
+			}
+		if (!engine) 
+			if (localStorage.getItem("searchengine"))
+				setEngine(localStorage.getItem("searchengine"));
+			else {
+				const baseEngine = 'google';
+				localStorage.setItem('searchengine', baseEngine);
+				setEngine(baseEngine);
+			}
+		if (!unit)
+			if (localStorage.getItem("tempunit")) 
+				setUnit(localStorage.getItem("tempunit"));
+			else {
+				const baseUnit = 'metric';
+				localStorage.setItem('tempunit', baseUnit);
+				setUnit(baseUnit);
+			}
+		if (!backgroundType) 
+			if(localStorage.getItem("TED_backgroundType")) 
+				setBackgroundType(localStorage.getItem("TED_backgroundType"));
+			else {
+				const baseBgType = 'photo';
+				localStorage.setItem('TED_backgroundType', baseBgType);
+				setBackgroundType(baseBgType);
+			}
+		if (backgroundType === "photo")
+			if (localStorage.getItem("TED_backgroundNumber"))
+				 setBackgroundNumber(localStorage.getItem("TED_backgroundNumber"));
+			else {
+				const baseBgNum = 8;
+				localStorage.setItem('TED_backgroundNumber', baseBgNum);
+				setBackgroundNumber(baseBgNum);
+			}
 		if (!cityData) return;
-
-		console.log('citydata should change');
 
 		let hour = new Date().getHours();
 		if (hour >= 5 && hour < 12) setMessage("Good morning, ");
@@ -89,16 +127,13 @@ const Home = (props) => {
 			setStatus("Fetching");
 			const response = await fetch(`https://api.openweathermap.org/data/2.5/onecall?lat=${cityData.lat}&lon=${cityData.lon}&units=${unit}&appid=${apikey}`);
 			const data = await response.json();
-			console.log("ONECALL/: ", response, data);
 			setData(data);
 			setIcon(`https://openweathermap.org/img/wn/${data.current.weather[0].icon}.png`);
-			console.log('citydata changed');
 			setStatus("Done");
-			console.log("first load");
 		};
 		if (status === "idle" || status === 'reload') 
 		fetchData();
-	}, [status, unit, cityData]);
+	}, [status, unit, cityData, backgroundType]);
 
 	useEffect(() => {
 		const interval = setInterval(async () => {
@@ -109,7 +144,7 @@ const Home = (props) => {
 			setData(data);
 			setIcon(`https://openweathermap.org/img/wn/${data.current.weather[0].icon}.png`);
 			setStatus("Done");
-			console.log("update (15min)");
+			// update current city data every 15min
 		}, 1000 * 60 * 15);
 		return () => {
 			clearInterval(interval);
@@ -161,7 +196,10 @@ const Home = (props) => {
 			} else if (e.shiftKey && e.keyCode === 87) {
 				localStorage.setItem('searchengine', 'wikipedia');
 				setEngine('wikipedia');
-			} 
+			} else if (e.shiftKey && e.keyCode === 70) {
+				e.preventDefault();
+				searchRef.current.focus();
+			}
 		}
 
 		document.addEventListener('keydown', handleKeyDown);
@@ -171,7 +209,6 @@ const Home = (props) => {
 		}
 
 	}, []);
-	console.log(engine);
 
 	const setAdditionals = () => {
 		const tdSunrise = new Date(data.current.sunrise * 1000);
@@ -220,6 +257,7 @@ const Home = (props) => {
 	const changeBackground = () => ModalService.open(BackgroundModal);
 	const configModal = () => ModalService.open(ConfigModal);
 	const openWidget = () => ModalService.open(WidgetMobile);
+	const showShortcuts = () => ModalService.open(Shortcuts);
 	const refreshCards = () => setRes({});
 	const refreshConfig = () => {
 		setEngine(localStorage.getItem("searchengine"));
@@ -229,9 +267,22 @@ const Home = (props) => {
 		setCityData(JSON.parse(localStorage.getItem('TED_cityData')));
 		setStatus('reload');
 	};
+	const changeBackgroundToImg = (e) => {
+		const backgroundNumber = e.currentTarget.children[0].dataset.index;
+		localStorage.setItem("TED_backgroundType", 'photo');
+		localStorage.setItem("TED_backgroundNumber", backgroundNumber);
+		setBackgroundType('photo');
+		setBackgroundNumber(backgroundNumber)
+	}
+	const changeBackgroundToLapse = () => {
+		localStorage.setItem("TED_backgroundType", 'lapse');
+		localStorage.setItem("TED_backgroundNumber", '');
+		setBackgroundType('lapse');
+		setBackgroundNumber(null);
+	}
 	return (
-		<Background>
-			<ModalRoot data={data} wdir={windDir} refreshCards={refreshCards} refreshData={refreshData} refreshEngines={refreshConfig} />
+		<Background bgType={backgroundType} bgNumber={backgroundNumber}>
+			<ModalRoot data={data} wdir={windDir} changeBackgroundToImg={changeBackgroundToImg} changeBackgroundToLapse={changeBackgroundToLapse} refreshCards={refreshCards} refreshData={refreshData} refreshEngines={refreshConfig} />
 			<ModalContainer flex>
 				<MenuContainer>
 					<MenuBar
@@ -240,6 +291,7 @@ const Home = (props) => {
 						changeCity={changeCity}
 						changeBackground={changeBackground}
 						configModal={configModal}
+						showShortcuts={showShortcuts}
 						page="landing"
 					/>
 
@@ -307,7 +359,7 @@ const Home = (props) => {
 
 			<Content>
 				<Greetings>
-					<span>{message} Taliyah!</span>
+					<span>{message} <strong>Taliyah!</strong></span>
 					<code>{time}</code>
 				</Greetings>
 				<SearchForm onSubmit={searchUrl}>

@@ -284,6 +284,7 @@ export const WeatherMenuInfo = styled.div`
 	font-size: 20px;
 	padding: 0 5px;
 	color: #fff;
+	text-shadow: 0 0 1px rgb(0 0 0 );
 
 	@media (max-width: 500px) {
 		font-size: 14px;
@@ -354,6 +355,7 @@ export const Greetings = styled.div`
 	justify-content: space-between;
 	align-items: center;
 	font-size: 20px;
+	text-shadow: 0 0 1px #000;
 
 	code {
 		padding: 2px;
@@ -437,6 +439,9 @@ export const Card = styled.div`
 	min-height: 110px;
 	color: #dcdfe3;
 	z-index: 2;
+	transition: background-color .15s ease;
+	border-radius: 10px;
+	padding-bottom: 10px;
 
 	${({ adder }) =>
 		adder &&
@@ -449,6 +454,10 @@ export const Card = styled.div`
 			cursor: pointer;
 			text-shadow: 0 0 3px black;
 		`}
+
+	:hover {
+		background-color: rgb(0 0 0 / .35);
+	}
 
 	:hover > div {
 		opacity: 1;
@@ -471,7 +480,7 @@ export const CardLink = styled.a`
 	cursor: pointer;
 	gap: 8px;
 	color: #dcdfe3;
-	text-shadow: 0 0 3px black;
+	text-shadow: 0 0 5px black;
 	margin: 20px 10px 0;
 	height: calc(100% - 20px);
 `;

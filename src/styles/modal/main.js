@@ -257,6 +257,7 @@ export const ModalBackgroundCards = styled.div`
 		>figcaption {
 			padding: 5px 0;
 			text-align: center;
+			text-transform: capitalize;
 		}
 	}
 	@media (max-width: 768px) {
@@ -271,4 +272,28 @@ export const ModalBackgroundCards = styled.div`
 			height: auto;
 		}
 	}
+`;
+
+export const ModalShortcut = styled.div`
+	display: flex;
+	align-items: center;
+	span {
+		padding: 0 5px;
+	}
+`;
+export const ModalShortcutKey = styled.code`
+	background: ${({theme}) => theme.blue2};
+	border-radius: 5px; 
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	color: #fff;
+	text-transform: uppercase;
+	padding: 5px 10px;
+`;
+export const ModalShortcutResult = styled.span`
+	color: ${({theme}) => theme.text};
+	font-weight: 600;
+	letter-spacing: .8px;
+	margin-left: 5px;
 `;

@@ -49,6 +49,7 @@ export const WeatherBox = styled.div`
     align-items: center;
     font-size: 20px;
     padding-bottom: 50px;
+    text-shadow: 0 0 2px #000;
 `;
 
 export const WeatherRow = styled.div`

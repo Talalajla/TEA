@@ -30,6 +30,7 @@ export const WeatherSearchBtn = styled.input.attrs({type: 'submit'})`
     align-items: center;
     padding: 0 30px;
     background: ${({theme}) => theme.background2};
+    color: ${({theme}) => theme.text};
     border-radius: 0 10px 10px 0;
     cursor: pointer;
     border: none;

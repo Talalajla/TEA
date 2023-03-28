@@ -9,6 +9,7 @@ import { MdPhotoLibrary } from 'react-icons/md';
 import { useClickAway } from 'react-use';
 import { MenuMoreWeatherInfo, MenuRow } from '../../styles/home/main';
 import { Link } from 'react-router-dom';
+import { FaKeyboard } from 'react-icons/fa';
 
 const MenuBar = (props) => {
 
@@ -22,7 +23,7 @@ const MenuBar = (props) => {
 
     return (
         <div ref={menubarRef} onClick={() => setOpenMenu(!openMenu)} style={{ position: 'relative' }}>
-            <HiMenuAlt4 />
+            <HiMenuAlt4 style={{filter: 'drop-shadow(0 0 1px rgb(0 0 0))'}} />
             <MenuMoreWeatherInfo show={openMenu} nopadd className='paddItems'>
                 {props.page === "landing" &&
                 <>
@@ -38,10 +39,18 @@ const MenuBar = (props) => {
                     <BsCloudSun />
                     <span>Weather for next days</span>
                 </MenuRow>
+                <MenuRow onClick={props.showShortcuts}>
+                    <FaKeyboard />
+                    <span>Shortcuts</span>
+                </MenuRow>
+                </>
+                }
                 <MenuRow onClick={props.changeBackground}>
                     <MdPhotoLibrary />
                     <span>Change background</span>
                 </MenuRow>
+                {props.page === "landing" && 
+                <>
                 <MenuRow onClick={props.configModal}>
                     <RiSettings4Fill />
                     <span>Settings</span>

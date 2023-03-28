@@ -8,19 +8,12 @@ import { ModalButton, ModalContainer, ModalInput, ModalLabel, ModalRow } from ".
 import { CityHiddenRadio, CityItemInfo, CityItemLabel, CityItemStyle, CityList, CityListItem, SearchCitiesBtn } from "../../styles/home/main";
 
 const CityModal = (props) => {
-	// const [refresh, setRefresh] = useState({});
 	const formSearch = useRef("");
 	const formCities = useRef("");
-	console.log('test');
 	const [newcity, setNewcity] = useState("-");
 	const [cityArray, setCityArray] = useState([]);
 	const [status, setStatus] = useState("idle");
 	const apikey = "c60621f6b01ac75d9cb4f8afef300fdc";
-
-	// useEffect(() => {
-	// 	const cityObj = JSON.parse(localStorage.getItem("TED_cityData"))
-	// 	if (cityObj) setNewcity(cityObj);
-	// }, []);
 
 	const searchCities = (e) => {
 		if (newcity !== "-") {
@@ -61,7 +54,6 @@ const CityModal = (props) => {
 		if (listItems.length >= 2) {
 			listItems.forEach((item, index) => (item.checked ? (checkedIndex = index) : null));
 			setNewcity(cityArray[checkedIndex]);
-			// console.log(cityArray[checkedIndex]);
 		} else {
 			setNewcity(cityArray[0]);
 		}

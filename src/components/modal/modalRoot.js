@@ -33,6 +33,8 @@ const ModalRoot = (props) => {
 				<ModalComponent
 					{...modal.props}
 					close={modal.close}
+					changeBackgroundToImg={props.changeBackgroundToImg}
+					changeBackgroundToLapse={props.changeBackgroundToLapse}
 					refreshCards={refresh}
 					refreshData={refreshData}
 					refreshEngines={refreshEngines}
