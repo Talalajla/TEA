@@ -71,29 +71,29 @@ export default function WeatherWidget(props) {
 							</ModalContainer>
 
 							<MenuHr />
-							<MenuRow>Wschód i zachód słońca</MenuRow>
+							<MenuRow>Sunrise and sunset</MenuRow>
 							<MenuRow>
 								<MenuRowDesc>
-									<MenuIcon title="wschód słońca" src={Weathers.sunriseIco}></MenuIcon>
+									<MenuIcon title="Sunrise time" src={Weathers.sunriseIco}></MenuIcon>
 									<MenuRowData>{props.sr}</MenuRowData>
 								</MenuRowDesc>
 								<MenuRowDesc>
-									<MenuIcon title="zachód słońca" src={Weathers.sunsetIco}></MenuIcon>
+									<MenuIcon title="Sunset time" src={Weathers.sunsetIco}></MenuIcon>
 									<MenuRowData>{props.ss}</MenuRowData>
 								</MenuRowDesc>
 							</MenuRow>
 							<MenuHr />
 
-							<MenuRow>Temperatura</MenuRow>
+							<MenuRow>Temperature</MenuRow>
 							<MenuRow>
 								<MenuRowDesc>
-									<MenuIcon title="temperatura" src={Weathers.termo1}></MenuIcon>
+									<MenuIcon title="Temperature" src={Weathers.termo1}></MenuIcon>
 									<MenuRowData>
 										{data.current.temp} {symbolUnit}
 									</MenuRowData>
 								</MenuRowDesc>
 								<MenuRowDesc>
-									<MenuIcon title="temperatura odczuwalna" src={Weathers.termo2}></MenuIcon>
+									<MenuIcon title="Temperature feelslike" src={Weathers.termo2}></MenuIcon>
 									<MenuRowData>
 										{data.current.feels_like} {symbolUnit}
 									</MenuRowData>
@@ -102,31 +102,31 @@ export default function WeatherWidget(props) {
 						</ModalContainer>
 						<ModalContainer flex col gap="5">
 							<MenuHr />
-							<MenuRow>Dodatkowe</MenuRow>
+							<MenuRow>More</MenuRow>
 
 							<MenuRow>
 								<MenuRowDesc>
-									<MenuIcon title="procent zachmurzenia" src={Weathers.cloud} />
+									<MenuIcon title="% clouds" src={Weathers.cloud} />
 									<MenuRowData>{data.current.clouds}%</MenuRowData>
 								</MenuRowDesc>
 								<MenuRowDesc>
-									<MenuIcon title="prędkość wiatru" src={Weathers.wind} />
+									<MenuIcon title="wind speed" src={Weathers.wind} />
 									<MenuRowData>{data.current.wind_speed} m/s</MenuRowData>
 								</MenuRowDesc>
 							</MenuRow>
 							<MenuRow>
 								<MenuRowDesc>
-									<MenuIcon title="wilgotność powietrza" src={Weathers.humidity} />
+									<MenuIcon title="humidity" src={Weathers.humidity} />
 									<MenuRowData>{data.current.humidity}%</MenuRowData>
 								</MenuRowDesc>
 								<MenuRowDesc>
-									<MenuIcon title="kierunek wiatru" src={Weathers.winddir} />
+									<MenuIcon title="wind direction" src={Weathers.winddir} />
 									<MenuRowData>{props.windDir}</MenuRowData>
 								</MenuRowDesc>
 							</MenuRow>
 							<MenuRow>
 								<MenuRowDesc fullWidth>
-									<MenuIcon title="Indeks UV" src={Weathers.uvi} />
+									<MenuIcon title="UV Index" src={Weathers.uvi} />
 									<MenuRowData>{data.current.uvi}</MenuRowData>
 									<span>{UV}</span>
 									<UVHelp ref={helpBtn} onClick={() => showHelpUV(true)}>
@@ -134,34 +134,34 @@ export default function WeatherWidget(props) {
 									</UVHelp>
 									<UVHelpBox show={helpUV}>
 										<MenuRow>
-											<UVColor col="#11f57b">0-2</UVColor>
-											<span>Niska</span>
+											<UVColor col="#11f57b" style={{color: '#000'}}>0-2</UVColor>
+											<span>Low</span>
 										</MenuRow>
 										<MenuRow>
-											<UVColor col="#e2f511">3-5</UVColor>
-											<span>Średnia</span>
+											<UVColor col="#e2f511" style={{color: '#000'}}>3-5</UVColor>
+											<span>Medium</span>
 										</MenuRow>
 
 										<MenuRow>
 											<UVColor col="#faa40f">6-7</UVColor>
-											<span>Wysoka</span>
+											<span>High</span>
 										</MenuRow>
 
 										<MenuRow>
 											<UVColor col="#fa0f46">8-10</UVColor>
-											<span>Bardzo wysoka!</span>
+											<span>Very High!</span>
 										</MenuRow>
 
 										<MenuRow>
 											<UVColor col="#9c0ffa">11+</UVColor>
-											<span>Ekstremalna!!!</span>
+											<span>Extreme!!!</span>
 										</MenuRow>
 									</UVHelpBox>
 								</MenuRowDesc>
 							</MenuRow>
 							<MenuRow>
 								<MenuRowDesc>
-									<MenuIcon title="Widoczność" src={Weathers.eye} />
+									<MenuIcon title="Visibility" src={Weathers.eye} />
 									<MenuRowData>
 										{Math.round(data.current.visibility / 10) / 100}
 										{data.current.visibility === 10000 && "+"} km
@@ -172,7 +172,7 @@ export default function WeatherWidget(props) {
 							{data.current.snow && (
 								<>
 									<MenuHr />
-									<MenuRow>Opady śniegu</MenuRow>
+									<MenuRow>Snow</MenuRow>
 									<MenuRow>
 										<MenuRowDesc>
 											<MenuIcon title="wysokość opadów śniegu, ostatnia godzina" src={Weathers.snow} />
@@ -184,7 +184,7 @@ export default function WeatherWidget(props) {
 							{data.current.rain && (
 								<>
 									<MenuHr />
-									<MenuRow>Opady deszczu</MenuRow>
+									<MenuRow>Rain</MenuRow>
 									<MenuRow>
 										<MenuRowDesc>
 											<MenuIcon title="wysokość opadów deszczu, ostatnia godzina" src={Weathers.rain} />

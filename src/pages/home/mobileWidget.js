@@ -94,7 +94,7 @@ const MobileWidget = (props) => {
 						</MenuRow>
 						<MenuRow>
 							<MenuRowDesc>
-								<MenuIcon title="temperatura odczuwalna" src={WeatherIcons.termo2}></MenuIcon>
+								<MenuIcon title="Feels like temperature" src={WeatherIcons.termo2}></MenuIcon>
 								<MenuRowData>Feels like temp:</MenuRowData>
 							</MenuRowDesc>
 							<MenuRowDesc mobile>
@@ -105,7 +105,7 @@ const MobileWidget = (props) => {
 						</MenuRow>
 						<MenuRow>
 							<MenuRowDesc>
-								<MenuIcon title="procent zachmurzenia" src={WeatherIcons.cloud} />
+								<MenuIcon title="% clouds" src={WeatherIcons.cloud} />
 								<MenuRowData>Clouds:</MenuRowData>
 							</MenuRowDesc>
 							<MenuRowDesc mobile>
@@ -114,7 +114,7 @@ const MobileWidget = (props) => {
 						</MenuRow>
 						<MenuRow>
 							<MenuRowDesc>
-								<MenuIcon title="prędkość wiatru" src={WeatherIcons.wind} />
+								<MenuIcon title="Wind speed" src={WeatherIcons.wind} />
 								<MenuRowData>Winds speed:</MenuRowData>
 							</MenuRowDesc>
 							<MenuRowDesc mobile>
@@ -123,7 +123,7 @@ const MobileWidget = (props) => {
 						</MenuRow>
 						<MenuRow>
 							<MenuRowDesc>
-								<MenuIcon title="wilgotność powietrza" src={WeatherIcons.humidity} />
+								<MenuIcon title="Humidity" src={WeatherIcons.humidity} />
 								<MenuRowData>Humidity:</MenuRowData>
 							</MenuRowDesc>
 							<MenuRowDesc mobile>
@@ -132,7 +132,7 @@ const MobileWidget = (props) => {
 						</MenuRow>
 						<MenuRow>
 							<MenuRowDesc>
-								<MenuIcon title="kierunek wiatru" src={WeatherIcons.winddir} />
+								<MenuIcon title="Wind direction" src={WeatherIcons.winddir} />
 								<MenuRowData>Wind direction:</MenuRowData>
 							</MenuRowDesc>
 							<MenuRowDesc mobile>
@@ -141,7 +141,7 @@ const MobileWidget = (props) => {
 						</MenuRow>
 						<MenuRow>
 							<MenuRowDesc>
-								<MenuIcon title="Indeks UV" src={WeatherIcons.uvi} />
+								<MenuIcon title="UV Index" src={WeatherIcons.uvi} />
 								<MenuRowData>UV Index:</MenuRowData>
 							</MenuRowDesc>
 							<MenuRowDesc mobile>
@@ -151,34 +151,34 @@ const MobileWidget = (props) => {
 								</UVHelp>
 								<UVHelpBox show={helpUV}>
 									<MenuRow>
-										<UVColor col="#11f57b">0-2</UVColor>
-										<span>Niska</span>
+										<UVColor col="#11f57b" style={{color: '#000'}}>0-2</UVColor>
+										<span>Low</span>
 									</MenuRow>
 									<MenuRow>
-										<UVColor col="#e2f511">3-5</UVColor>
-										<span>Średnia</span>
+										<UVColor col="#e2f511" style={{color: '#000'}}>3-5</UVColor>
+										<span>Medium</span>
 									</MenuRow>
 
 									<MenuRow>
 										<UVColor col="#faa40f">6-7</UVColor>
-										<span>Wysoka</span>
+										<span>High</span>
 									</MenuRow>
 
 									<MenuRow>
 										<UVColor col="#fa0f46">8-10</UVColor>
-										<span>Bardzo wysoka!</span>
+										<span>Very high!</span>
 									</MenuRow>
 
 									<MenuRow>
 										<UVColor col="#9c0ffa">11+</UVColor>
-										<span>Ekstremalna!!!</span>
+										<span>Extreme!!!</span>
 									</MenuRow>
 								</UVHelpBox>
 							</MenuRowDesc>
 						</MenuRow>
 						<MenuRow>
 							<MenuRowDesc>
-								<MenuIcon title="Widoczność" src={WeatherIcons.eye} />
+								<MenuIcon title="Visibility" src={WeatherIcons.eye} />
 								<MenuRowData>Visibility:</MenuRowData>
 							</MenuRowDesc>
 							<MenuRowDesc mobile>

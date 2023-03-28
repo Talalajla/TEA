@@ -13,7 +13,6 @@ const CurrentImage = styled.div`
 	background-image: ${({ nr, source }) => {
 		const res = Object.entries(source);
 		let src;
-		console.log(nr, res[0]);
 		res.map((item) => (+item[0] === nr ? (src = item[1]) : null));
 		return `url(${src})`;
 	}};
@@ -33,7 +32,6 @@ const Background = (props) => {
 	useEffect(() => {
 		const interval = setInterval(async () => {
 			const hourNow = new Date().getHours();
-			console.log(props.bgType);
 			if (hour !== hourNow && (props.bgType === 'lapse' || localStorage.getItem('TED_backgroundType') === 'lapse')) {
 				setTimeout(() => (imgRef.current.style.opacity = 0), 0);
 				setTimeout(() => setHour(hourNow), 450);
