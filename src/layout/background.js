@@ -32,7 +32,7 @@ const Background = (props) => {
 	useEffect(() => {
 		const interval = setInterval(async () => {
 			const hourNow = new Date().getHours();
-			if (hour !== hourNow && (props.bgType === 'lapse' || localStorage.getItem('TED_backgroundType') === 'lapse')) {
+			if (hour !== hourNow && (props.bgType === 'lapse' || localStorage.getItem('TEA_backgroundType') === 'lapse')) {
 				setTimeout(() => (imgRef.current.style.opacity = 0), 0);
 				setTimeout(() => setHour(hourNow), 450);
 				setTimeout(() => (imgRef.current.style.opacity = .5), 500);

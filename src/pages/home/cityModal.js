@@ -43,7 +43,7 @@ const CityModal = (props) => {
 			lat: newcity.lat,
 			lon: newcity.lon
 		}
-		localStorage.setItem("TED_cityData", JSON.stringify(cityObj));
+		localStorage.setItem("TEA_cityData", JSON.stringify(cityObj));
 		props.close();
 		props.refreshData();
 	};

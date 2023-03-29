@@ -132,15 +132,15 @@ export default function Weather(props) {
 	useClickAway(SearchRef, () => setSearchedCities([]), ["mousedown"]);
 
     useEffect(() => {
-	if (!recentCities && localStorage.getItem('TED_recentCities')) 
-		setRecentCities(JSON.parse(localStorage.getItem('TED_recentCities')));
+	if (!recentCities && localStorage.getItem('TEA_recentCities')) 
+		setRecentCities(JSON.parse(localStorage.getItem('TEA_recentCities')));
 		
 	if(!cityData)
-		if (localStorage.getItem("TED_cityData")) 
-			setCityData(JSON.parse(localStorage.getItem("TED_cityData")));
+		if (localStorage.getItem("TEA_cityData")) 
+			setCityData(JSON.parse(localStorage.getItem("TEA_cityData")));
 		else {
 			const baseCityData = {"city":"Warsaw","country":"PL","state":"Masovian Voivodeship","lat":52.2319581,"lon":21.0067249};
-			localStorage.setItem("TED_cityData", JSON.stringify(baseCityData));
+			localStorage.setItem("TEA_cityData", JSON.stringify(baseCityData));
 			setCityData(baseCityData);
 		}
 	if (!unit)
@@ -152,19 +152,19 @@ export default function Weather(props) {
 			setUnit(baseUnit);
 		}
 	if (!backgroundType) 
-		if(localStorage.getItem("TED_backgroundType")) 
-			setBackgroundType(localStorage.getItem("TED_backgroundType"));
+		if(localStorage.getItem("TEA_backgroundType")) 
+			setBackgroundType(localStorage.getItem("TEA_backgroundType"));
 		else {
 			const baseBgType = 'photo';
-			localStorage.setItem('TED_backgroundType', baseBgType);
+			localStorage.setItem('TEA_backgroundType', baseBgType);
 			setBackgroundType(baseBgType);
 		}
 	if (backgroundType === "photo")
-		if (localStorage.getItem("TED_backgroundNumber"))
-			 setBackgroundNumber(localStorage.getItem("TED_backgroundNumber"));
+		if (localStorage.getItem("TEA_backgroundNumber"))
+			 setBackgroundNumber(localStorage.getItem("TEA_backgroundNumber"));
 		else {
 			const baseBgNum = 8;
-			localStorage.setItem('TED_backgroundNumber', baseBgNum);
+			localStorage.setItem('TEA_backgroundNumber', baseBgNum);
 			setBackgroundNumber(baseBgNum);
 		}
 
@@ -248,9 +248,9 @@ export default function Weather(props) {
 
 		const recentCitiesArray = figureRecentCitiesArray(cityObj);
 
-		localStorage.setItem('TED_recentCities', JSON.stringify(recentCitiesArray));
+		localStorage.setItem('TEA_recentCities', JSON.stringify(recentCitiesArray));
 		setRecentCities(recentCitiesArray);
-		localStorage.setItem('TED_cityData', JSON.stringify(cityObj));
+		localStorage.setItem('TEA_cityData', JSON.stringify(cityObj));
 		setSearchedCities([]);
 		SearchRef.current.querySelector('input[type=search]').value = '';
 		setCityData(cityObj);
@@ -270,14 +270,14 @@ export default function Weather(props) {
 	}
 	const changeBackgroundToImg = (e) => {
 		const backgroundNumber = e.currentTarget.children[0].dataset.index;
-		localStorage.setItem("TED_backgroundType", 'photo');
-		localStorage.setItem("TED_backgroundNumber", backgroundNumber);
+		localStorage.setItem("TEA_backgroundType", 'photo');
+		localStorage.setItem("TEA_backgroundNumber", backgroundNumber);
 		setBackgroundType('photo');
 		setBackgroundNumber(backgroundNumber)
 	}
 	const changeBackgroundToLapse = () => {
-		localStorage.setItem("TED_backgroundType", 'lapse');
-		localStorage.setItem("TED_backgroundNumber", '');
+		localStorage.setItem("TEA_backgroundType", 'lapse');
+		localStorage.setItem("TEA_backgroundNumber", '');
 		setBackgroundType('lapse');
 		setBackgroundNumber(null);
 	}
