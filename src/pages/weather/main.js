@@ -50,6 +50,7 @@ const extractDaysData = weatherArr => {
 		const newArrayLine = weatherArr[i].map((interval) => interval.main.temp);
 		tempArray.push(newArrayLine);
 	}
+	console.log(tempArray);
 	return tempArray;
 }
 const extractHoursData = weatherArr => {
@@ -230,7 +231,7 @@ export default function Weather(props) {
 		const city = e.target.nextElementSibling.value;
 		if (city === "" || !city) return;
 
-		fetch(`http://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=5&appid=${apikey}`)
+		fetch(`https://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=5&appid=${apikey}`)
 			.then(res => res.json())
 			.then(data => setSearchedCities(data));
 	}
@@ -304,22 +305,22 @@ export default function Weather(props) {
 					}
 				</WeatherRecentDays>
 				<WeatherSearchBox ref={SearchRef}>
-					<WeatherSearchLabel>
-						<WeatherSearchBtn onClick={searchForCities} value="Search" />
-						<WeatherSearch placeholder="Change city..." />
+					<WeatherSearchLabel active={searchedCities.length !== 0}>
+						<WeatherSearchBtn active={searchedCities.length !== 0} onClick={searchForCities} value="Search" />
+						<WeatherSearch active={searchedCities.length !== 0} placeholder="Change city..." />
 					</WeatherSearchLabel>
-						{searchedCities.length !== 0 && (
-							<WeatherCitiesList>
-								{searchedCities.map((item, index) => (
-									<WeatherCitiesItem key={index} data-val={index} onClick={changeCity}>
-										<WeatherCitiesItemData>
-											<strong>{item.name}, {item.country}</strong><span>({item.state})</span>
-										</WeatherCitiesItemData>
-										<AiOutlinePlusCircle />
-									</WeatherCitiesItem>	
-								))}
-							</WeatherCitiesList>
-						)}
+					{searchedCities.length !== 0 && (
+						<WeatherCitiesList active={searchedCities.length !== 0}>
+							{searchedCities.map((item, index) => (
+								<WeatherCitiesItem key={index} data-val={index} onClick={changeCity}>
+									<WeatherCitiesItemData>
+										<strong>{item.name}, {item.country}</strong><span>({item.state})</span>
+									</WeatherCitiesItemData>
+									<AiOutlinePlusCircle />
+								</WeatherCitiesItem>	
+							))}
+						</WeatherCitiesList>
+					)}
 				</WeatherSearchBox>
 				<Days days={days} daysInfo={daysInfo} changeDay={changeDay} />
 				<ChartContainer>

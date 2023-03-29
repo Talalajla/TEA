@@ -25,7 +25,7 @@ const CityModal = (props) => {
 		if (city === "" || !city) return;
 		const fetchCities = async () => {
 			setStatus("loading cities");
-			const response = await fetch(`http://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=5&appid=${apikey}`);
+			const response = await fetch(`https://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=5&appid=${apikey}`);
 			const data = await response.json();
 			setCityArray(data);
 			setStatus("idle");

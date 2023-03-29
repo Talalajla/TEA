@@ -8,6 +8,7 @@
     "@testing-library/user-event": "^13.5.0",
     "chart.js": "^4.2.1",
     "chartjs-plugin-zoom": "^2.0.0",
+    "now": "^21.0.1",
     "react": "^18.1.0",
     "react-chartjs-2": "^5.2.0",
     "react-color-palette": "^6.2.0",
@@ -16,11 +17,13 @@
     "react-router-dom": "^6.3.0",
     "react-scripts": "5.0.1",
     "react-use": "^17.3.2",
+    "serve": "^14.2.0",
     "styled-components": "^5.3.5",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "dev": "react-scripts start",
+    "start": "serve --single ./build",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"

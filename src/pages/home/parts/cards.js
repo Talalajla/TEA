@@ -67,18 +67,18 @@ const Cards = (props) => {
 					<CardFavicon black>
 						<AiOutlinePlus />
 					</CardFavicon>
-					<div>Dodaj skrót</div>
+					<div>Add new</div>
 				</Card>
 			)}
 			<CardMenu ref={menu} open={isopen}>
 				<MenuWrapper>
 					<button onClick={props.openEdit()}>
 						<AiTwotoneEdit />
-						Edytuj skrót
+						Edit
 					</button>
 					<button onClick={deleteItem}>
 						<BsTrashFill />
-						Usuń skrót
+						Delete
 					</button>
 				</MenuWrapper>
 			</CardMenu>

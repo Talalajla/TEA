@@ -72,7 +72,7 @@ const Day = (props) => {
 
             setAvgTemp(sumTemps);
             setDayDesc(dayName);
-            setDayIcon(`http://openweathermap.org/img/wn/${icon}@2x.png`);
+            setDayIcon(`https://openweathermap.org/img/wn/${icon}@2x.png`);
         }
         getAvgStats();
         setUnit(localStorage.getItem('tempunit'));

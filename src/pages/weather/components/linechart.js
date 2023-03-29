@@ -51,7 +51,7 @@ const LineChart = ({chartDays, chartHours, chartIcons, unit, title}) => {
                     y: {
                         ticks: {
                             callback: function(value, index, ticks) {
-                                return `${value} ${UnitFromText(unit)}`;
+                                return `${Math.round(value*100)/100} ${UnitFromText(unit)}`;
                             }
                         }
                     }
