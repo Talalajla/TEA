@@ -13,7 +13,7 @@ Check the weather forecast in your area and for the next 5 days in any location 
 There are plenty photos available that can be used as a background. Additionally, you can add your favourte links to the tabs and simply relish the view! 
 
 ## How to Use
-To use the app you need to download files and run via npm or check my live demo.
+To use the app you need to download files and run via npm or check this [live demo](https://tea-talalajla.vercel.app/).
 Use button in top left corner in order to change your current city, check 5-days forecast or customize the page.
 
 ## Technologies Used
