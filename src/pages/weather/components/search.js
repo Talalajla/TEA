@@ -57,6 +57,7 @@ export const WeatherCitiesList = styled.ul`
     border-radius: 0 0 10px 10px;
     border-top: 1px solid #3d3d3d;
     border: ${({active}) => active ? '1px solid #000' : ''};
+	z-index: 10;
 `;
 export const WeatherCitiesItem = styled.li`
     display: flex;
