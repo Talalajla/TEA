@@ -7,7 +7,7 @@ import { ModalBackgroundCards, ModalButton, ModalCardContainer, ModalContainer, 
 import { ColorPicker, useColor } from "react-color-palette";
 import "react-color-palette/lib/css/styles.css";
 import lapse from "./lapse.jpg";
-import photos from "./photos/photos";
+import OptimizedPhotos from "./photos/500/optimizedPhotos";
 
 const BackgroundModal = (props) => {
 	const [colorView, setColorView] = useState(false);
@@ -32,21 +32,21 @@ const BackgroundModal = (props) => {
 					<ModalCardContainer>
 						<ModalBackgroundCards>
 							<figure style={{cursor: 'not-allowed'}}>
-								<img src="https://via.placeholder.com/150x85" />
+								<img src="https://via.placeholder.com/150x85" alt="work in progress" />
 								<figcaption>random (WIP)</figcaption>
 							</figure>
 							<figure onClick={handleLapseClick}>
-								<img src={lapse} />
+								<img src={lapse} alt="24 time-lapse photos of bay" />
 								<figcaption>24h lapse</figcaption>
 							</figure>
 							<figure style={{cursor: 'not-allowed'}}>
-								<img src="https://via.placeholder.com/150x85" />
+								<img src="https://via.placeholder.com/150x85" alt="work in progress" />
 								<figcaption>color (WIP)</figcaption>
 							</figure>
 							{
-							Object.entries(photos).map((photo, key) =>
+							Object.entries(OptimizedPhotos).map((photo, key) =>
 								<figure key={key} onClick={handlePhotoClick}>
-									<img src={photo[1]} data-index={key} />
+									<img src={photo[1]} data-index={key} alt="nature beautyful background" />
 								</figure>
 							)}
 						</ModalBackgroundCards>

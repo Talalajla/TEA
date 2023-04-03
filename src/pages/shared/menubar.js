@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react'
-import { AiOutlinePlusCircle } from 'react-icons/ai';
-import { AiOutlineRollback } from "react-icons/ai"
+import { AiOutlinePlusCircle, AiOutlineRollback } from 'react-icons/ai';
+import { IoMdMoon } from "react-icons/io"
 import { BiCurrentLocation } from 'react-icons/bi';
 import { BsCloudSun } from "react-icons/bs";
 import { HiMenuAlt4 } from 'react-icons/hi';
@@ -22,7 +22,7 @@ const MenuBar = (props) => {
     );
 
     return (
-        <div ref={menubarRef} onClick={() => setOpenMenu(!openMenu)} style={{ position: 'relative' }}>
+        <div ref={menubarRef} onClick={() => setOpenMenu(!openMenu)} style={{ position: 'relative', display: 'flex' }}>
             <HiMenuAlt4 style={{filter: 'drop-shadow(0 0 1px rgb(0 0 0))'}} />
             <MenuMoreWeatherInfo show={openMenu} nopadd className='paddItems'>
                 {props.page === "landing" &&
@@ -58,13 +58,14 @@ const MenuBar = (props) => {
                 </>
                 }
                 <MenuRow onClick={props.toggleDM}>
-                    <AiOutlinePlusCircle />
+                    <IoMdMoon />
                     <span>Toggle Darkmode</span>
                 </MenuRow>
                 {props.page !== "landing" &&
                 <>
                 <MenuRow as={Link} to="/">
                     <AiOutlineRollback />
+                    
                     <span>Back to start</span>
                 </MenuRow>
                 </>

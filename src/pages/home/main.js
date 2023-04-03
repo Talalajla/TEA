@@ -364,7 +364,7 @@ const Home = (props) => {
 				</Greetings>
 				<SearchForm onSubmit={searchUrl}>
 					<SearchBox>
-						<UrlInput ref={searchRef} name="url" placeholder="Search something..." />
+						<UrlInput autoFocus ref={searchRef} name="url" placeholder="Search something..." />
 						<FunctionBox engine={engine} onClick={configModal}>
 							{engine === "google" && <FcGoogle />}
 							{engine === "bing" && <DiBingSmall />}

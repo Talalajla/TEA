@@ -25,7 +25,6 @@ export const ModalBox = styled.div`
 		css`
 			display: grid;
 			grid-template-rows: 60px 1fr 60px;
-			overflow: scroll;
 		`}
 	background: ${({ theme }) => theme.background};
 	border: 1px solid ${({ theme }) => theme.background2};
@@ -51,7 +50,8 @@ export const ModalBody = styled.div`
 	padding: 20px 0;
 	${({bgOverflow}) => 
 		bgOverflow && css`
-			overflow: scroll;
+			overflow-y: scroll;
+			overflow-x: hidden;
 			height: 100%;
 		`};
 `;

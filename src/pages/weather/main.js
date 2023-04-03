@@ -266,6 +266,11 @@ export default function Weather(props) {
 			lat: recentCity.lat,
 			lon: recentCity.lon
 		}
+		const recentCitiesArray = figureRecentCitiesArray(newCityObject);
+
+		localStorage.setItem('TEA_recentCities', JSON.stringify(recentCitiesArray));
+		localStorage.setItem('TEA_cityData', JSON.stringify(newCityObject));
+		setRecentCities(recentCitiesArray);
 		setCityData(newCityObject);
 		setStatus('idle');
 	}

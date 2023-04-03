@@ -6,6 +6,7 @@ import ModalPartFooter from "../../components/modal/modalFooter";
 import { AiOutlineSearch } from "react-icons/ai";
 import { ModalButton, ModalContainer, ModalInput, ModalLabel, ModalRow } from "../../styles/modal/main";
 import { CityHiddenRadio, CityItemInfo, CityItemLabel, CityItemStyle, CityList, CityListItem, SearchCitiesBtn } from "../../styles/home/main";
+import { figureRecentCitiesArray } from "../shared/helper/recentCities";
 
 const CityModal = (props) => {
 	const formSearch = useRef("");
@@ -43,6 +44,9 @@ const CityModal = (props) => {
 			lat: newcity.lat,
 			lon: newcity.lon
 		}
+		const recentCitiesArray = figureRecentCitiesArray(cityObj);
+
+		localStorage.setItem('TEA_recentCities', JSON.stringify(recentCitiesArray));
 		localStorage.setItem("TEA_cityData", JSON.stringify(cityObj));
 		props.close();
 		props.refreshData();
@@ -58,7 +62,7 @@ const CityModal = (props) => {
 			setNewcity(cityArray[0]);
 		}
 	};
-
+	console.log(cityArray !== []);
 	return (
 		<Modal close={props.close}>
 			<ModalPartHeader>Change your city</ModalPartHeader>
@@ -67,12 +71,14 @@ const CityModal = (props) => {
 					<ModalContainer flex col gap="5" as="form" ref={formSearch} onSubmit={searchCities}>
 						<ModalRow>
 							<ModalContainer flex col gap="5">
-								<span>Chosen city:</span>
 								{newcity !== "-" && (
+									<>
+									<span>Chosen city:</span>
 									<ModalContainer flex jccenter gap="10" fz="14">
 										<span>{newcity.name},</span> <span>{newcity.state},</span>
 										<span>{newcity.country}</span>
 									</ModalContainer>
+									</>
 								)}
 							</ModalContainer>
 						</ModalRow>
@@ -85,30 +91,32 @@ const CityModal = (props) => {
 						</ModalContainer>
 					</ModalContainer>
 					<ModalContainer flex col as="form" ref={formCities}>
-						<ModalRow>Choose your city:</ModalRow>
-						{cityArray !== [] && (
-							<CityList>
-								{cityArray.map((item, index) => (
-									<CityListItem key={index}>
-										<CityItemLabel onInput={overrideCity}>
-											<CityHiddenRadio name="cityRadio" />
-											<CityItemStyle>
-												<CityItemInfo>
-													<span>{item.name}</span>
-													<span>{item.state}</span>
-												</CityItemInfo>
-												<CityItemInfo>
-													<span>{item.country}</span>
-													<ModalContainer flex col>
-														<span>Lat: {Math.round(item.lat * 100) / 100}</span>
-														<span>Lon: {Math.round(item.lon * 100) / 100}</span>
-													</ModalContainer>
-												</CityItemInfo>
-											</CityItemStyle>
-										</CityItemLabel>
-									</CityListItem>
-								))}
-							</CityList>
+						{cityArray.length > 0 && (
+							<>
+								<ModalRow>Choose your city:</ModalRow>
+								<CityList>
+									{cityArray.map((item, index) => (
+										<CityListItem key={index}>
+											<CityItemLabel onInput={overrideCity}>
+												<CityHiddenRadio name="cityRadio" />
+												<CityItemStyle>
+													<CityItemInfo>
+														<span>{item.name}</span>
+														<span>{item.state}</span>
+													</CityItemInfo>
+													<CityItemInfo>
+														<span>{item.country}</span>
+														<ModalContainer flex col>
+															<span>Lat: {Math.round(item.lat * 100) / 100}</span>
+															<span>Lon: {Math.round(item.lon * 100) / 100}</span>
+														</ModalContainer>
+													</CityItemInfo>
+												</CityItemStyle>
+											</CityItemLabel>
+										</CityListItem>
+									))}
+								</CityList>
+							</>
 						)}
 					</ModalContainer>
 				</ModalContainer>
