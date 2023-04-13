@@ -50,7 +50,6 @@ const extractDaysData = weatherArr => {
 		const newArrayLine = weatherArr[i].map((interval) => interval.main.temp);
 		tempArray.push(newArrayLine);
 	}
-	console.log(tempArray);
 	return tempArray;
 }
 const extractHoursData = weatherArr => {

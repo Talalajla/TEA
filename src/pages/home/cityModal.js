@@ -62,7 +62,6 @@ const CityModal = (props) => {
 			setNewcity(cityArray[0]);
 		}
 	};
-	console.log(cityArray !== []);
 	return (
 		<Modal close={props.close}>
 			<ModalPartHeader>Change your city</ModalPartHeader>

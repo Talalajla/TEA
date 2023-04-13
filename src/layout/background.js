@@ -14,7 +14,6 @@ const CurrentImage = styled.div`
 		const res = Object.entries(source);
 		let src;
 		res.map((item) => (+item[0] === nr ? (src = item[1]) : null));
-		console.log(src);
 		return `url(${src})`;
 	}};
 	transition: opacity 0.5s;
