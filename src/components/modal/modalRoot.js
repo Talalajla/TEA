@@ -12,6 +12,7 @@ const ModalRoot = (props) => {
 		props.refreshData();
 	};
 	const refreshEngines = () => props.refreshEngines();
+	const refreshNickname = () => props.refreshNickname();
 
 	useEffect(() => {
 		ModalService.on("open", ({ component, props }) => {
@@ -35,9 +36,11 @@ const ModalRoot = (props) => {
 					close={modal.close}
 					changeBackgroundToImg={props.changeBackgroundToImg}
 					changeBackgroundToLapse={props.changeBackgroundToLapse}
+					changeBackgroundToCustom={props.changeBackgroundToCustom}
 					refreshCards={refresh}
 					refreshData={refreshData}
 					refreshEngines={refreshEngines}
+					refreshNickname={refreshNickname}
 					style={{ display: "block" }}
 					data={props.data}
 					wd={props.wdir}

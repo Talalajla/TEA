@@ -64,7 +64,10 @@ const extractHoursData = weatherArr => {
 const extractIconsData = weatherArr => {
 	const iconsArray = [];
 	for(var i=0;i<5;i++) {
-		const newArrayLine = weatherArr[i].map((interval) => interval.weather[0].icon);
+		const newArrayLine = weatherArr[i].map((interval) => {
+			const ico = interval.weather[0].icon.repeat('n', 'd');
+			return ico;
+		});
 		iconsArray.push(newArrayLine)
 	}
 	return iconsArray;
@@ -188,7 +191,7 @@ export default function Weather(props) {
 			setStatus("Done");
 		};
 		if (status === "idle") fetchData();
-    }, [cityData, recentCities, status, unit]);
+    }, [cityData, recentCities, status, unit, backgroundType]);
 
 	const changeUnit = (newUnit) => {
 		if (newUnit !== unit) {
@@ -286,13 +289,23 @@ export default function Weather(props) {
 		setBackgroundType('lapse');
 		setBackgroundNumber(null);
 	}
+	const changeBackgroundToCustom = () => {
+		localStorage.setItem("TEA_backgroundType", 'custom');
+		localStorage.setItem("TEA_backgroundNumber", '');
+		setBackgroundType('custom');
+		setBackgroundNumber(null);
+	}
 
 	const changeBackground = () => ModalService.open(BackgroundModal);
 	const showShortcuts = () => ModalService.open(Shortcuts);
 
 	return (
 		<Background bgType={backgroundType} bgNumber={backgroundNumber}>
-			<ModalRoot changeBackgroundToImg={changeBackgroundToImg} changeBackgroundToLapse={changeBackgroundToLapse} />
+			<ModalRoot 
+				changeBackgroundToImg={changeBackgroundToImg} 
+				changeBackgroundToLapse={changeBackgroundToLapse}
+				changeBackgroundToCustom={changeBackgroundToCustom}
+			/>
 			<MenuContainer>
 				<MenuBar 
 					toggleDM={props.toggleDM}

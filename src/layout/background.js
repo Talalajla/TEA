@@ -11,13 +11,17 @@ const CurrentImage = styled.div`
 	background-repeat: no-repeat;
 	background-size: cover;
 	background-image: ${({ nr, source }) => {
+		console.log(localStorage.getItem('TEA_customBackgroundURL'));
+		if (localStorage.getItem('TEA_customBackgroundURL')) {
+			return `url(${localStorage.getItem('TEA_customBackgroundURL')})`;
+		}
 		const res = Object.entries(source);
 		let src;
 		res.map((item) => (+item[0] === nr ? (src = item[1]) : null));
 		return `url(${src})`;
 	}};
+	opacity: 0;
 	transition: opacity 0.5s;
-	opacity: .5;
 `;
 
 const Background = (props) => {
@@ -41,6 +45,11 @@ const Background = (props) => {
 		return () => clearInterval(interval);
 	}, [hour, props.bgType]);
 
+	useEffect(() => {
+		setTimeout(() => (imgRef.current.style.opacity = 0), 0);
+		setTimeout(() => (imgRef.current.style.opacity = .5), 500);
+	}, [props.bgType])
+
 	return (
 		<>
 			<Wrapper>{props.children}</Wrapper>
@@ -52,6 +61,10 @@ const Background = (props) => {
 				{
 					props.bgType === "photo" &&
 					<CurrentImage ref={imgRef} source={Photos} nr={+props.bgNumber} />
+				}
+				{
+					props.bgType === 'custom' &&
+					<CurrentImage ref={imgRef}  />
 				}
 			</MainBackground>
 		</>

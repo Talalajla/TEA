@@ -54,10 +54,12 @@ const Home = (props) => {
 		`${new Date().getHours() < 10 ? "0" : ""}${new Date().getHours()}:${new Date().getMinutes() < 10 ? "0" : ""}${new Date().getMinutes()}`
 	);
 	const alertsRef = useRef("");
+	const [nickname, setNickname] = useState('');
+	const [mark, setMark] = useState('');
 	const [menu, openMenu] = useState(false);
 	const [alerts, openAlerts] = useState(true);
 	const [res, setRes] = useState();
-	const [message, setMessage] = useState("Good morning, ");
+	const [message, setMessage] = useState("Good morning");
 
 	const [status, setStatus] = useState("idle");
 	const [data, setData] = useState([]);
@@ -116,19 +118,27 @@ const Home = (props) => {
 				localStorage.setItem('TEA_backgroundNumber', baseBgNum);
 				setBackgroundNumber(baseBgNum);
 			}
+		if (!nickname)
+			if(localStorage.getItem('TEA_nickname'))
+				setNickname(localStorage.getItem('TEA_nickname'));
+			else
+				localStorage.setItem('TEA_nickname', '');
 		if (!cityData) return;
-
-		let hour = new Date().getHours();
-		if (hour >= 5 && hour < 12) setMessage("Good morning, ");
-		else if (hour >= 12 && hour < 18) setMessage("Good afternoon, ");
-		else setMessage("Good evening, ");
 
 		const fetchData = async () => {
 			setStatus("Fetching");
 			const response = await fetch(`https://api.openweathermap.org/data/2.5/onecall?lat=${cityData.lat}&lon=${cityData.lon}&units=${unit}&appid=${apikey}`);
 			const data = await response.json();
+
+			const timeNow = new Date().getHours(); 
+			let overrideIcon;
+			if ((timeNow > 22) || (timeNow >= 0 && timeNow < 6)) {
+				overrideIcon = data.current.weather[0].icon;
+			} else {
+				overrideIcon = data.current.weather[0].icon.replace('n', 'd');
+			}
 			setData(data);
-			setIcon(`https://openweathermap.org/img/wn/${data.current.weather[0].icon}.png`);
+			setIcon(`https://openweathermap.org/img/wn/${overrideIcon}.png`);
 			setStatus("Done");
 		};
 		if (status === "idle" || status === 'reload') 
@@ -155,9 +165,6 @@ const Home = (props) => {
 		const interval = setInterval(() => {
 			let hour = new Date().getHours();
 			let mins = new Date().getMinutes();
-			if (hour >= 6 && hour < 12) setMessage("Good morning, ");
-			else if (hour >= 12 && hour < 18) setMessage("Good afternoon, ");
-			else setMessage("Good evening, ");
 			const result = `${hour < 10 ? "0" : ""}${hour}:${mins < 10 ? "0" : ""}${mins}`;
 			setTime(result);
 		}, 5000);
@@ -210,6 +217,41 @@ const Home = (props) => {
 
 	}, []);
 
+	useEffect(() => {
+		console.log('why?');
+		const msg = rollMessage();
+		setMessage(msg);
+	}, []);
+
+	const rollMessage = () => {
+		let msg, time = '';
+		const hour = new Date().getHours();
+		const messages = [
+			'Hello',
+			'Hi',
+			'Time to work',
+			"Hope you're fine",
+			'Good ',
+			'Have a good ',
+			'How you feel this ',
+		]
+		const randomNum = Math.floor(Math.random() * messages.length);
+		if (randomNum > 3) {
+			if (hour >= 5 && hour < 12) time = 'morning';
+			else if (hour >= 12 && hour < 18) time = 'afternoon';
+			else time = 'evening';
+		}
+		if (randomNum === messages.length - 1) {
+			setMark('?');
+		} else {
+			setMark('!');
+		}
+		msg = `${messages[randomNum]}${time}`;
+		console.log(randomNum, msg, time)
+
+		return msg;
+	}
+
 	const setAdditionals = () => {
 		const tdSunrise = new Date(data.current.sunrise * 1000);
 		const tdSunset = new Date(data.current.sunset * 1000);
@@ -242,10 +284,12 @@ const Home = (props) => {
 		else if (engine === "wikipedia") enginePrefix = "https://en.wikipedia.org/w/index.php?search=";
 		else enginePrefix = "https://duckduckgo.com/?q=";
 
+		const searchInNew = localStorage.getItem('TEA_searchInNewWindow');
+		
 		const whatDoWeSearch = e.currentTarget.url.value;
 		if (whatDoWeSearch === "") return;
 		const setUrl = `${enginePrefix}${whatDoWeSearch}`;
-		window.open(setUrl, "_blank");
+		window.open(setUrl, !!searchInNew ? '_blank' : '_self');
 		e.currentTarget.url.value = "";
 	};
 
@@ -263,6 +307,7 @@ const Home = (props) => {
 		setEngine(localStorage.getItem("searchengine"));
 		setUnit(localStorage.getItem("tempunit"));
 	};
+	const refreshNickname = () => setNickname(localStorage.getItem('TEA_nickname'));
 	const refreshData = () => {
 		setCityData(JSON.parse(localStorage.getItem('TEA_cityData')));
 		setStatus('reload');
@@ -280,9 +325,25 @@ const Home = (props) => {
 		setBackgroundType('lapse');
 		setBackgroundNumber(null);
 	}
+	const changeBackgroundToCustom = () => {
+		localStorage.setItem("TEA_backgroundType", 'custom');
+		localStorage.setItem("TEA_backgroundNumber", '');
+		setBackgroundType('custom');
+		setBackgroundNumber(null);
+	}
 	return (
 		<Background bgType={backgroundType} bgNumber={backgroundNumber}>
-			<ModalRoot data={data} wdir={windDir} changeBackgroundToImg={changeBackgroundToImg} changeBackgroundToLapse={changeBackgroundToLapse} refreshCards={refreshCards} refreshData={refreshData} refreshEngines={refreshConfig} />
+			<ModalRoot 
+				data={data} 
+				wdir={windDir} 
+				changeBackgroundToImg={changeBackgroundToImg} 
+				changeBackgroundToLapse={changeBackgroundToLapse} 
+				changeBackgroundToCustom={changeBackgroundToCustom}
+				refreshCards={refreshCards} 
+				refreshData={refreshData} 
+				refreshEngines={refreshConfig} 
+				refreshNickname={refreshNickname}
+			/>
 			<ModalContainer flex>
 				<MenuContainer>
 					<MenuBar
@@ -359,7 +420,7 @@ const Home = (props) => {
 
 			<Content>
 				<Greetings>
-					<span>{message} <strong>Taliyah!</strong></span>
+					<span>{message}{nickname ? ',' : ''} <strong>{nickname ? ` ${nickname}` : ''}{mark}</strong></span>
 					<code>{time}</code>
 				</Greetings>
 				<SearchForm onSubmit={searchUrl}>

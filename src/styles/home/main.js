@@ -472,7 +472,7 @@ export const Card = styled.div`
 	}
 `;
 
-export const CardLink = styled.a`
+export const CardLink = styled.div`
 	display: flex;
 	flex-direction: column;
 	align-items: center;
@@ -486,7 +486,7 @@ export const CardLink = styled.a`
 `;
 
 export const CardFavicon = styled.div`
-	background: #fff;
+	background: ${({theme}) => theme.background};
 	box-shadow: 0 0 1px #111;
 	width: 60px;
 	height: 60px;
@@ -511,6 +511,8 @@ export const CardFavicon = styled.div`
 
 	svg {
 		font-size: 20px;
+		color: ${({theme}) => theme.text};
+		
 	}
 
 	${({ black }) =>
@@ -561,6 +563,7 @@ export const CardMenu = styled.dialog`
 	top: 0;
 	z-index: 3;
 	border: 1px solid ${({ theme }) => theme.background2};
+	background: ${({theme}) => theme.background};
 	border-radius: 5px;
 	padding: 2px;
 	min-width: 150px;
@@ -582,6 +585,7 @@ export const MenuWrapper = styled.div`
 		display: flex;
 		gap: 5px;
 		cursor: pointer;
+		color: ${({theme}) => theme.text};
 
 		:hover {
 			background: rgba(0, 0, 0, 0.1);

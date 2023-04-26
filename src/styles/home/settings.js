@@ -1,18 +1,18 @@
 import styled from "styled-components";
 
 export const SelectContainer = styled.div`
-	width: 80%;
+	width: 100%;
 	margin: 0 auto;
 	display: flex;
 	align-items: center;
 	justify-content: center;
 	flex-wrap: wrap;
-	border-radius: 25px;
+	border-radius: 10px;
 	background: ${({ theme }) => theme.background2};
 	color: ${({ theme }) => theme.background};
 	font-size: 30px;
 	> * {
-		width: 33%;
+		width: 30%;
 		display: flex;
 		justify-content: center;
 		align-items: center;

@@ -7,6 +7,7 @@ import { useClickAway } from "react-use";
 const Cards = (props) => {
 	const cardsNames = JSON.parse(localStorage.getItem("cardnames"));
 	const cardsUrls = JSON.parse(localStorage.getItem("cardurls"));
+	const cardsInNew = localStorage.getItem("TEA_cardsInNewWindow");
 	const menu = useRef("");
 	const [isopen, openMenu] = useState(false);
 
@@ -17,6 +18,8 @@ const Cards = (props) => {
 		},
 		["mouseup"]
 	);
+
+	console.log('cards', cardsInNew);
 
 	const deleteItem = () => {
 		const element = document.querySelector(".selected").querySelectorAll("a div");
@@ -47,6 +50,11 @@ const Cards = (props) => {
 		openMenu(true);
 	};
 
+	const handleOpenCard = (url) => {
+		const target = !!localStorage.getItem('TEA_cardsInNewWindow');
+		window.open(url, target ? '_blank' : '_self');
+	}
+
 	return (
 		<CardsWrapper>
 			{cardsNames.map((item, index) => (
@@ -54,7 +62,7 @@ const Cards = (props) => {
 					<CardEdit onClick={relocateDialog}>
 						<BsThreeDots />
 					</CardEdit>
-					<CardLink href={`https://${cardsUrls[index]}`} target="_blank">
+					<CardLink onClick={() => handleOpenCard(`https://${cardsUrls[index]}`)}>
 						<CardFavicon data-url={cardsUrls[index]}>
 							<CardImg src={`https://www.google.com/s2/favicons?domain=${cardsUrls[index]}&sz=128`} />
 						</CardFavicon>

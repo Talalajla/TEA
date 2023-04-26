@@ -29,7 +29,7 @@ export const ModalBox = styled.div`
 	background: ${({ theme }) => theme.background};
 	border: 1px solid ${({ theme }) => theme.background2};
 	color: ${({ theme }) => theme.text};
-	padding: 20px;
+	padding: 20px 40px;
 	border-radius: 10px;
 	min-width: 400px;
 	max-height: 95%;
@@ -194,13 +194,41 @@ export const ModalInput = styled.input`
 				outline: 2px solid ${({ theme }) => theme.blue2};
 			}
 		`}
+	${({ fullRadius }) => 
+		fullRadius && css`
+			border-radius: 10px;
+			flex: 1;
+			outline: none;
+			padding: 15px 20px;
+		`}
 `;
 
 export const ModalRow = styled.div`
 	display: flex;
 	padding: 5px 0;
 	width: 100%;
+	padding-top: ${({padTop}) => padTop ? '20px' : null};
 `;
+
+export const NewTabCheckboxStyle = styled.div`
+	width: 70px;
+	height: 35px;
+	border-radius: 25px;
+	background-color: ${({theme}) => theme.settsText};
+	position: relative;
+`;
+export const NewTabCheckboxDot = styled.div`
+	position: absolute;
+	transition: left .15s;
+	width: 25px;
+	height: 25px;
+	top: 50%;
+	left: 5px;
+	transform: translateY(-50%);
+	border-radius: 50%;
+	background: #fff;
+`;
+
 
 export const DefaultRadio = styled.input.attrs({ type: "radio" })`
 	display: none;
@@ -296,4 +324,54 @@ export const ModalShortcutResult = styled.span`
 	font-weight: 600;
 	letter-spacing: .8px;
 	margin-left: 5px;
+`;
+
+
+export const NewTabLabel = styled.label`
+	position: relative;
+`;
+
+export const NewTabCheckbox = styled.input.attrs({ type: 'checkbox' })`
+	display: none;
+	visibility: hidden;
+
+	:checked + div {
+		background-color: ${({theme}) => theme.blue1};
+		>div {
+			left: 40px;
+		}
+	}
+`;
+
+export const ModalInlineCheckboxContainer = styled.div`
+	display: flex;
+	width: 100%;
+	padding-top: 20px;
+`;
+export const ModalInlineTexts = styled.div`
+	display: flex;
+	flex-direction: column;
+	gap: 5px;
+	flex: 1;
+`;
+export const ModalInlineCheckbox = styled.div`
+	height: 100%;
+	/* width: 150px; */
+	display: flex;
+	justify-content: flex-end;
+	
+`;
+export const ModalInlineTitle = styled.p`
+	font-weight: 600;
+	font-size: 16px;
+	letter-spacing: .8px;
+	line-height: 22px;
+	margin: 0;
+`;
+export const ModalInlineMessage = styled.p`
+	font-weight: 400;
+	font-size: 13px;
+	letter-spacing: .5px;
+	line-height: 16px;
+	margin: 0;
 `;

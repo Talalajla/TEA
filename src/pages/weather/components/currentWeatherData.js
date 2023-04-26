@@ -8,6 +8,15 @@ const CurrentWeatherData = ({dayData, unit, changeUnit, cityData}) => {
     const now = dayData.current;
     const details = now.weather[0];
 
+    let overrideIcon;
+    const timeNow = new Date().getHours();
+    console.log(timeNow);
+    if ((timeNow > 22) || (timeNow >= 0 && timeNow < 6)) {
+        overrideIcon = details.icon;
+    } else {
+        overrideIcon = details.icon.replace('n', 'd');
+    }
+
     return (
         <>
         {
@@ -16,7 +25,7 @@ const CurrentWeatherData = ({dayData, unit, changeUnit, cityData}) => {
                 <WeatherRow>{`${cityData.city}, ${cityData.country}`}</WeatherRow>
                 <WeatherRow>
                     <span>
-                        <img width='100' src={`https://openweathermap.org/img/wn/${details.icon}@2x.png`} alt="Weather icon" />
+                        <img width='100' src={`https://openweathermap.org/img/wn/${overrideIcon}@2x.png`} alt="Weather icon" />
                     </span>
                     <WeatherCurrentTemp>
                         {now.temp} 
