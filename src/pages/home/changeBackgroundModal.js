@@ -6,6 +6,7 @@ import { ModalBackgroundCards, ModalButton, ModalCardContainer, ModalContainer, 
 import { ColorPicker, useColor } from "react-color-palette";
 import "react-color-palette/lib/css/styles.css";
 import lapse from "./lapse.jpg";
+import wheel from "./colorWheel.jpg";
 import OptimizedPhotos from "./photos/500/optimizedPhotos";
 import { SearchCitiesBtn } from "../../styles/home/main";
 import { BsCheckLg } from "react-icons/bs";
@@ -84,7 +85,7 @@ const BackgroundModal = (props) => {
 									<figcaption>24h lapse</figcaption>
 								</figure>
 								<figure onClick={() => setColorView(true)}>
-									<img src="https://via.placeholder.com/150x85" alt="work in progress" />
+									<img src={wheel} alt="Color Wheel" />
 									<figcaption>color</figcaption>
 								</figure>
 								{

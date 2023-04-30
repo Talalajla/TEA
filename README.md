@@ -10,14 +10,14 @@ This app allows you to choose one of 9 different search engines and allows you t
 Check the weather forecast in your area and for the next 5 days in any location on Earth.
 
 ## Customize your home page!
-There are plenty photos available that can be used as a background. Additionally, you can add your favourte links to the tabs and simply relish the view! 
+There are plenty of photos available that can be used as a background, you can even add a photo from the web as your background! Additionally, you can add your favorite links to the tabs and simply enjoy the view!
 
 ## How to Use
-To use the app you need to download files and run via npm or check this [live demo](https://tea-talalajla.vercel.app/).
+To use the app you need to download files and run via npm or check this [link](https://tea-talalajla.vercel.app/).
 Use button in top left corner in order to change your current city, check 5-days forecast or customize the page.
 
 ## Technologies Used
-The app was built using HTML, CSS, and JavaScript with ReactJS, and API provided by OpenWeatherMap.
+The app was built using HTML, CSS, and JavaScript with ReactJS, Styled-Components, and API provided by OpenWeatherMap.
 
 ![weather2](https://user-images.githubusercontent.com/68278690/228673495-b30517ca-29b3-4b2b-b6ff-414baa9b2172.jpg)
 
