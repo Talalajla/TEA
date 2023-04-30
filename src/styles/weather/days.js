@@ -127,3 +127,56 @@ export const WeatherRecentDay = styled.div`
         background: ${({theme}) => theme.background};
     }
 `;
+
+export const DaysIntervalContainer = styled.div`
+    background-color: ${({theme}) => theme.weatherCards};
+    color: ${({theme}) => theme.weatherCardsTxt};
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 30px;
+    display: flex;
+    flex-direction: column;
+    transition: background .2s;
+    overflow-x: auto;
+    max-width: 830px;
+
+    h4 {
+        margin: 0 0 20px;
+        font-size: 18px;
+    }
+
+    img {
+        filter: drop-shadow(0 0 1px #000);
+    }
+
+    :hover {
+        background: ${({theme}) => theme.weatherCardsHov};
+    }
+`;
+
+export const DaysIntervalInner = styled.div`
+    display: flex;
+`;
+
+export const DaysIntervalCard = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 87.7px;
+
+    div {
+        font-weight: 500;
+    }
+
+    svg {
+        font-size: 30px;
+        color: ${({theme}) => theme.text};
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        display: none;
+        @media (max-width: 1000px) {
+            display: block;
+        }
+    }
+`;

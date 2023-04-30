@@ -203,11 +203,69 @@ export const ModalInput = styled.input`
 		`}
 `;
 
+export const ModalInputRange = styled.input.attrs({type: 'range'})`
+	width: 100%;
+	margin-bottom: 30px;
+	margin-top: 15px;
+
+    -webkit-appearance: none;
+    &:focus {
+        outline: none;
+    }
+    &::-webkit-slider-runnable-track {
+        width: 100%;
+        height: 1px;
+        cursor: pointer;
+        box-shadow: none;
+        background: ${({theme}) => theme.background2};
+        border-radius: 0px;
+        border: 0px solid #010101;
+    }
+    &::-moz-range-track {
+        width: 100%;
+        height: 100%;
+        cursor: pointer;
+        box-shadow: none;
+        background: ${({theme}) => theme.background2};
+        border-radius: 0px;
+        border: 0px solid #010101;
+    }
+  
+    &::-webkit-slider-thumb {
+        box-shadow: none;
+        border: 0px solid ${({theme}) => theme.blue2};
+        box-shadow: 0px 10px 10px rgba(0,0,0,0.1);
+        height: 42px;
+        width: 22px;
+        border-radius: 22px;
+        background: ${({theme}) => theme.blue2};
+        cursor: pointer;
+        -webkit-appearance: none;
+        margin-top: -20px;
+    }
+  &::-moz-range-thumb{
+        box-shadow: none;
+        border: 0px solid ${({theme}) => theme.blue2};
+        box-shadow: 0px 10px 10px rgba(0,0,0,0.1);
+        height: 42px;
+        width: 22px;
+        border-radius: 22px;
+        background: ${({theme}) => theme.blue2};
+        cursor: pointer;
+        -webkit-appearance: none;
+        margin-top: -20px;
+  }
+  &::-moz-focus-outer {
+    border: 0;
+    }
+`;
+
 export const ModalRow = styled.div`
 	display: flex;
 	padding: 5px 0;
 	width: 100%;
 	padding-top: ${({padTop}) => padTop ? '20px' : null};
+	justify-content: ${({align}) => align ? align : 'flex-start'};
 `;
 
 export const NewTabCheckboxStyle = styled.div`
@@ -374,4 +432,20 @@ export const ModalInlineMessage = styled.p`
 	letter-spacing: .5px;
 	line-height: 16px;
 	margin: 0;
+`;
+
+export const ModalReturnView = styled.div`
+	display: flex;
+	align-items: center;
+	padding: 0 0 15px 0;
+	gap: 5px;
+	font-size: 20px;
+	font-weight: 500;
+	width: 100px;
+	color: ${({theme}) => theme.text};
+	cursor: pointer;
+
+	:hover {
+		color: ${({theme}) => theme.weatherCardsTxt};
+	}
 `;

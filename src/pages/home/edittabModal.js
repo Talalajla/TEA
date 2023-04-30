@@ -12,9 +12,9 @@ const EdittabModal = (props) => {
 	const [currenturl, setCurrenturl] = useState("");
 
 	useEffect(() => {
-		const element = document.querySelector(".selected").querySelectorAll("a div");
-		setCurrentname(element[1].textContent);
-		setCurrenturl(element[0].dataset.url);
+		const element = document.querySelector(".selected");
+		setCurrentname(element.children[1].children[1].textContent);
+		setCurrenturl(element.children[1].children[0].dataset.url);
 	}, []);
 
 	// if (JSON.parse(localStorage.getItem("cardnames") == null)) localStorage.setItem("cardnames", []);

@@ -65,7 +65,7 @@ const extractIconsData = weatherArr => {
 	const iconsArray = [];
 	for(var i=0;i<5;i++) {
 		const newArrayLine = weatherArr[i].map((interval) => {
-			const ico = interval.weather[0].icon.repeat('n', 'd');
+			const ico = interval.weather[0].icon.replace('n', 'd');
 			return ico;
 		});
 		iconsArray.push(newArrayLine)
@@ -119,7 +119,7 @@ export default function Weather(props) {
 	const [chartIcons, setChartIcons] = useState(null);
 	const [chartHours, setChartHours] = useState(null);
 	const [chartData, setChartData] = useState(null);
-	const [activeChart, setActiveChart] = useState(0); //today
+	const [activeChart, setActiveChart] = useState("0"); //today
 	const [unit, setUnit] = useState(null);
 	const [cityData, setCityData] = useState(null);
 	const [currentData, setCurrentData] = useState([]);
@@ -131,45 +131,58 @@ export default function Weather(props) {
 
 	const [backgroundType, setBackgroundType] = useState(null);
 	const [backgroundNumber, setBackgroundNumber] = useState(null);
+	const [hexColor, setHexColor] = useState('');
+	const [shadow, setShadow] = useState('');
 
 	useClickAway(SearchRef, () => setSearchedCities([]), ["mousedown"]);
 
     useEffect(() => {
-	if (!recentCities && localStorage.getItem('TEA_recentCities')) 
-		setRecentCities(JSON.parse(localStorage.getItem('TEA_recentCities')));
-		
-	if(!cityData)
-		if (localStorage.getItem("TEA_cityData")) 
-			setCityData(JSON.parse(localStorage.getItem("TEA_cityData")));
-		else {
-			const baseCityData = {"city":"Warsaw","country":"PL","state":"Masovian Voivodeship","lat":52.2319581,"lon":21.0067249};
-			localStorage.setItem("TEA_cityData", JSON.stringify(baseCityData));
-			setCityData(baseCityData);
-		}
-	if (!unit)
-		if (localStorage.getItem("tempunit")) 
-			setUnit(localStorage.getItem("tempunit"));
-		else {
-			const baseUnit = 'metric';
-			localStorage.setItem('tempunit', baseUnit);
-			setUnit(baseUnit);
-		}
-	if (!backgroundType) 
-		if(localStorage.getItem("TEA_backgroundType")) 
-			setBackgroundType(localStorage.getItem("TEA_backgroundType"));
-		else {
-			const baseBgType = 'photo';
-			localStorage.setItem('TEA_backgroundType', baseBgType);
-			setBackgroundType(baseBgType);
-		}
-	if (backgroundType === "photo")
-		if (localStorage.getItem("TEA_backgroundNumber"))
-			 setBackgroundNumber(localStorage.getItem("TEA_backgroundNumber"));
-		else {
-			const baseBgNum = 8;
-			localStorage.setItem('TEA_backgroundNumber', baseBgNum);
-			setBackgroundNumber(baseBgNum);
-		}
+		if (!recentCities && localStorage.getItem('TEA_recentCities')) 
+			setRecentCities(JSON.parse(localStorage.getItem('TEA_recentCities')));
+			
+		if(!cityData)
+			if (localStorage.getItem("TEA_cityData")) 
+				setCityData(JSON.parse(localStorage.getItem("TEA_cityData")));
+			else {
+				const baseCityData = {"city":"Warsaw","country":"PL","state":"Masovian Voivodeship","lat":52.2319581,"lon":21.0067249};
+				localStorage.setItem("TEA_cityData", JSON.stringify(baseCityData));
+				setCityData(baseCityData);
+			}
+		if (!unit)
+			if (localStorage.getItem("tempunit")) 
+				setUnit(localStorage.getItem("tempunit"));
+			else {
+				const baseUnit = 'metric';
+				localStorage.setItem('tempunit', baseUnit);
+				setUnit(baseUnit);
+			}
+		if (!backgroundType) 
+			if(localStorage.getItem("TEA_backgroundType")) 
+				setBackgroundType(localStorage.getItem("TEA_backgroundType"));
+			else {
+				const baseBgType = 'photo';
+				localStorage.setItem('TEA_backgroundType', baseBgType);
+				setBackgroundType(baseBgType);
+			}
+		if (backgroundType === "photo")
+			if (localStorage.getItem("TEA_backgroundNumber"))
+				setBackgroundNumber(localStorage.getItem("TEA_backgroundNumber"));
+			else {
+				const baseBgNum = 8;
+				localStorage.setItem('TEA_backgroundNumber', baseBgNum);
+				setBackgroundNumber(baseBgNum);
+			}
+		if (!hexColor)
+			if (localStorage.getItem('TEA_backgroundColor'))
+				setHexColor(localStorage.getItem('TEA_backgroundColor'));
+			else
+				localStorage.setItem('TEA_backgroundColor', '');
+		if (!shadow)
+			if (localStorage.getItem('TEA_backgroundShadow'))
+				setShadow(localStorage.getItem('TEA_backgroundShadow'));
+			else
+				localStorage.setItem('TEA_backgroundShadow', '50');
+
 
 		if (!cityData || !unit) return;
 
@@ -296,15 +309,26 @@ export default function Weather(props) {
 		setBackgroundNumber(null);
 	}
 
+	const changeBackgroundToColor = (hex) => {
+		localStorage.setItem("TEA_backgroundType", 'color');
+		localStorage.setItem("TEA_backgroundNumber", '');
+		setBackgroundType('color');
+		setHexColor(hex);
+		setBackgroundNumber(null);
+	}
+
 	const changeBackground = () => ModalService.open(BackgroundModal);
 	const showShortcuts = () => ModalService.open(Shortcuts);
+	const changeBackgroundShadow = (shadowValue) => setShadow(shadowValue);
 
 	return (
-		<Background bgType={backgroundType} bgNumber={backgroundNumber}>
+		<Background bgType={backgroundType} bgNumber={backgroundNumber} hexColor={hexColor} shadowValue={shadow}>
 			<ModalRoot 
 				changeBackgroundToImg={changeBackgroundToImg} 
 				changeBackgroundToLapse={changeBackgroundToLapse}
 				changeBackgroundToCustom={changeBackgroundToCustom}
+				changeBackgroundToColor={changeBackgroundToColor}
+				changeBackgroundShadow={changeBackgroundShadow}
 			/>
 			<MenuContainer>
 				<MenuBar 
@@ -339,7 +363,10 @@ export default function Weather(props) {
 						</WeatherCitiesList>
 					)}
 				</WeatherSearchBox>
-				<Days days={days} daysInfo={daysInfo} changeDay={changeDay} />
+				{
+					data && chartData &&
+					<Days days={days} daysInfo={daysInfo} changeDay={changeDay} weatherData={chartData} currentDay={activeChart} />
+				}
 				<ChartContainer>
 					{
 						data && chartData && <LineChart title={daysInfo.dayName[activeChart]} unit={unit} chartDays={chartData.days[activeChart]} chartIcons={chartData.icons[activeChart]} chartHours={chartData.hours[activeChart]} />

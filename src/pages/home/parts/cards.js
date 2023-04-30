@@ -7,7 +7,6 @@ import { useClickAway } from "react-use";
 const Cards = (props) => {
 	const cardsNames = JSON.parse(localStorage.getItem("cardnames"));
 	const cardsUrls = JSON.parse(localStorage.getItem("cardurls"));
-	const cardsInNew = localStorage.getItem("TEA_cardsInNewWindow");
 	const menu = useRef("");
 	const [isopen, openMenu] = useState(false);
 
@@ -19,12 +18,10 @@ const Cards = (props) => {
 		["mouseup"]
 	);
 
-	console.log('cards', cardsInNew);
-
 	const deleteItem = () => {
-		const element = document.querySelector(".selected").querySelectorAll("a div");
-		const name = element[1].textContent;
-		const url = element[0].dataset.url;
+		const element = document.querySelector(".selected");
+		const name = element.children[1].children[1].textContent;
+		const url = element.children[1].children[0].dataset.url;
 
 		const cardNames = JSON.parse(localStorage.getItem("cardnames"));
 		const cardUrls = JSON.parse(localStorage.getItem("cardurls"));

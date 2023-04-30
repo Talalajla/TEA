@@ -11,7 +11,7 @@ export const WeatherContent = styled.div`
 	margin-bottom: 150px;
 	margin-top: 30px;
 
-	@media (max-width: 800px) {
+	@media (max-width: 950px) {
 		width: 100%;
 		padding: 0 30px;
 		margin-top: 30px;

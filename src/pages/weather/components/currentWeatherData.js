@@ -10,7 +10,7 @@ const CurrentWeatherData = ({dayData, unit, changeUnit, cityData}) => {
 
     let overrideIcon;
     const timeNow = new Date().getHours();
-    console.log(timeNow);
+    
     if ((timeNow > 22) || (timeNow >= 0 && timeNow < 6)) {
         overrideIcon = details.icon;
     } else {

@@ -37,6 +37,8 @@ const ModalRoot = (props) => {
 					changeBackgroundToImg={props.changeBackgroundToImg}
 					changeBackgroundToLapse={props.changeBackgroundToLapse}
 					changeBackgroundToCustom={props.changeBackgroundToCustom}
+					changeBackgroundToColor={props.changeBackgroundToColor}
+					changeBackgroundShadow={props.changeBackgroundShadow}
 					refreshCards={refresh}
 					refreshData={refreshData}
 					refreshEngines={refreshEngines}

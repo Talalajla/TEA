@@ -11,7 +11,6 @@ const CurrentImage = styled.div`
 	background-repeat: no-repeat;
 	background-size: cover;
 	background-image: ${({ nr, source }) => {
-		console.log(localStorage.getItem('TEA_customBackgroundURL'));
 		if (localStorage.getItem('TEA_customBackgroundURL')) {
 			return `url(${localStorage.getItem('TEA_customBackgroundURL')})`;
 		}
@@ -21,7 +20,14 @@ const CurrentImage = styled.div`
 		return `url(${src})`;
 	}};
 	opacity: 0;
-	transition: opacity 0.5s;
+	transition: opacity .5s;
+`;
+const ColorBg = styled.div`
+	width: 100%;
+	height: 100%;
+	opacity: 0;
+	transition: opacity .5s;
+	background-color: ${({color}) => color};
 `;
 
 const Background = (props) => {
@@ -47,8 +53,8 @@ const Background = (props) => {
 
 	useEffect(() => {
 		setTimeout(() => (imgRef.current.style.opacity = 0), 0);
-		setTimeout(() => (imgRef.current.style.opacity = .5), 500);
-	}, [props.bgType])
+		setTimeout(() => (imgRef.current.style.opacity = props.shadowValue/100), 500);
+	}, [props.bgType, props.hexColor, props.shadowValue])
 
 	return (
 		<>
@@ -65,6 +71,10 @@ const Background = (props) => {
 				{
 					props.bgType === 'custom' &&
 					<CurrentImage ref={imgRef}  />
+				}
+				{
+					props.bgType === 'color' &&
+					<ColorBg ref={imgRef} color={props.hexColor} />
 				}
 			</MainBackground>
 		</>

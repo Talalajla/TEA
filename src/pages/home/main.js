@@ -70,6 +70,8 @@ const Home = (props) => {
 	
 	const [backgroundType, setBackgroundType] = useState(null);
 	const [backgroundNumber, setBackgroundNumber] = useState(null);
+	const [hexColor, setHexColor] = useState('');
+	const [shadow, setShadow] = useState(null);
 
 	const searchRef = useRef(null);
 
@@ -123,6 +125,16 @@ const Home = (props) => {
 				setNickname(localStorage.getItem('TEA_nickname'));
 			else
 				localStorage.setItem('TEA_nickname', '');
+		if (!hexColor)
+			if (localStorage.getItem('TEA_backgroundColor'))
+				setHexColor(localStorage.getItem('TEA_backgroundColor'));
+			else
+				localStorage.setItem('TEA_backgroundColor', '');
+		if (!shadow)
+			if (localStorage.getItem('TEA_backgroundShadow'))
+				setShadow(localStorage.getItem('TEA_backgroundShadow'));
+			else
+				localStorage.setItem('TEA_backgroundShadow', '50');
 		if (!cityData) return;
 
 		const fetchData = async () => {
@@ -143,7 +155,8 @@ const Home = (props) => {
 		};
 		if (status === "idle" || status === 'reload') 
 		fetchData();
-	}, [status, unit, cityData, backgroundType]);
+	}, [status, unit, cityData, backgroundType, engine, hexColor, shadow, nickname]);
+
 
 	useEffect(() => {
 		const interval = setInterval(async () => {
@@ -218,7 +231,6 @@ const Home = (props) => {
 	}, []);
 
 	useEffect(() => {
-		console.log('why?');
 		const msg = rollMessage();
 		setMessage(msg);
 	}, []);
@@ -247,7 +259,6 @@ const Home = (props) => {
 			setMark('!');
 		}
 		msg = `${messages[randomNum]}${time}`;
-		console.log(randomNum, msg, time)
 
 		return msg;
 	}
@@ -331,14 +342,25 @@ const Home = (props) => {
 		setBackgroundType('custom');
 		setBackgroundNumber(null);
 	}
+	const changeBackgroundToColor = (hex) => {
+		localStorage.setItem("TEA_backgroundType", 'color');
+		localStorage.setItem("TEA_backgroundNumber", '');
+		setHexColor(hex);
+		setBackgroundType('color');
+		setBackgroundNumber(null);
+	}
+	const changeBackgroundShadow = (shadowValue) => setShadow(shadowValue);
+
 	return (
-		<Background bgType={backgroundType} bgNumber={backgroundNumber}>
+		<Background bgType={backgroundType} bgNumber={backgroundNumber} hexColor={hexColor} shadowValue={shadow}>
 			<ModalRoot 
 				data={data} 
 				wdir={windDir} 
 				changeBackgroundToImg={changeBackgroundToImg} 
 				changeBackgroundToLapse={changeBackgroundToLapse} 
 				changeBackgroundToCustom={changeBackgroundToCustom}
+				changeBackgroundToColor={changeBackgroundToColor}
+				changeBackgroundShadow={changeBackgroundShadow}
 				refreshCards={refreshCards} 
 				refreshData={refreshData} 
 				refreshEngines={refreshConfig} 

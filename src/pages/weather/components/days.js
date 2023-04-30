@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { DayItem, DayRadio, DaysContainer } from "../../../styles/weather/days";
+import { DayItem, DayRadio, DaysContainer, DaysIntervalCard, DaysIntervalContainer, DaysIntervalInner } from "../../../styles/weather/days";
 import { UnitFromText } from "../../shared/helper/unit";
+import { BiMoveHorizontal } from "react-icons/bi";
 
 const findMostFrequentItem = (arr) => {
     return arr.sort((a, b) => 
@@ -15,22 +16,10 @@ const findIcon = (id) => {
     else if (id >= 511 && id < 600) return "09d"
     else if (id >= 600 && id < 700) return "13d"
     else if (id >= 700 && id < 800) return "50d"
-    else if (id === 800) 
-        return new Date().getHours() >= 20 && new Date().getHours() < 6 
-        ?  "01d"
-        :  "01n"
-    else if (id === 801)
-        return new Date().getHours() >= 20 && new Date().getHours() < 6 
-        ?  "02d"
-        :  "02n"
-    else if (id === 802)
-        return new Date().getHours() >= 20 && new Date().getHours() < 6 
-        ?  "03d"
-        :  "03n"
-    else if (id > 802)
-        return new Date().getHours() >= 20 && new Date().getHours() < 6 
-        ?  "04d"
-        :  "04n"
+    else if (id === 800) return "01d"
+    else if (id === 801) return "02d"
+    else if (id === 802) return "03d"
+    else if (id > 802) return "04d"
     else return "Error";
 } 
 
@@ -57,7 +46,6 @@ const Day = (props) => {
     const [avgTemp, setAvgTemp] = useState('');
     const [dayDesc, setDayDesc] = useState('');
     const [dayIcon, setDayIcon] = useState('');
-    const [unit, setUnit] = useState('');
 
     const {day, dayInfo, index} = props;
 
@@ -75,11 +63,10 @@ const Day = (props) => {
             setDayIcon(`https://openweathermap.org/img/wn/${icon}@2x.png`);
         }
         getAvgStats();
-        setUnit(localStorage.getItem('tempunit'));
     }, [day]);
     let unitText;
-    if (unit !== '')
-        unitText = UnitFromText(unit);
+    if (props.unit !== '')
+        unitText = UnitFromText(props.unit);
     
     const createID = `day${index}`;
     return (
@@ -101,13 +88,46 @@ const Day = (props) => {
     );
 }
 
-const Days = ({days, daysInfo, changeDay}) => {
+const Days = ({days, daysInfo, changeDay, weatherData, currentDay}) => {
+    const [unit, setUnit] = useState('');
+    
+    useEffect(() => {
+        setUnit(localStorage.getItem('tempunit'));
+    }, [days]);
+
     if (!days || !daysInfo) return;
 
+    const currentDayData = [
+        weatherData.days[currentDay],
+        weatherData.hours[currentDay],
+        weatherData.icons[currentDay],
+    ]
+
     return(
+        <>
         <DaysContainer>
-            {days.map((day, index) => <Day changeDay={changeDay} day={day} dayInfo={daysInfo} index={index} key={index} /> )}
+            {days.map((day, index) => <Day changeDay={changeDay} unit={unit} day={day} dayInfo={daysInfo} index={index} key={index} /> )}
         </DaysContainer>
+        <DaysIntervalContainer>
+            <h4>Rozkład godzinowy</h4>
+            <DaysIntervalInner>
+            {   currentDayData[1][0] !== '00:00' &&
+                <DaysIntervalCard style={{minWidth: '0', position: 'relative', marginLeft: `${Math.floor((+currentDayData[1][0].slice(0, 2))/3*87.7)}px`}}>
+                    <BiMoveHorizontal style={{left: `-${(+currentDayData[1][0].slice(0, 2))/3*50}px`}} />
+                </DaysIntervalCard>
+            }
+            {
+                currentDayData[0].map((temperature, index) => (
+                    <DaysIntervalCard key={index}>
+                        <img src={`https://openweathermap.org/img/wn/${currentDayData[2][index]}.png`} alt='weather icon' />
+                        <div style={{padding: '2.5px 0 5px'}}>{temperature}{UnitFromText(unit)}</div>
+                        <div>{currentDayData[1][index]}</div>
+                    </DaysIntervalCard>
+                ))
+            }
+            </DaysIntervalInner>
+        </DaysIntervalContainer>
+        </>
     );
 }
 
