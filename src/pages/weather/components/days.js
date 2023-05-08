@@ -109,7 +109,7 @@ const Days = ({days, daysInfo, changeDay, weatherData, currentDay}) => {
             {days.map((day, index) => <Day changeDay={changeDay} unit={unit} day={day} dayInfo={daysInfo} index={index} key={index} /> )}
         </DaysContainer>
         <DaysIntervalContainer>
-            <h4>Rozkład godzinowy</h4>
+            <h4>Hourly schedule</h4>
             <DaysIntervalInner>
             {   currentDayData[1][0] !== '00:00' &&
                 <DaysIntervalCard style={{minWidth: '0', position: 'relative', marginLeft: `${Math.floor((+currentDayData[1][0].slice(0, 2))/3*87.7)}px`}}>

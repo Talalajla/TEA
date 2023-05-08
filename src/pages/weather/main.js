@@ -70,6 +70,7 @@ const extractIconsData = weatherArr => {
 		});
 		iconsArray.push(newArrayLine)
 	}
+	console.log(iconsArray);
 	return iconsArray;
 }
 

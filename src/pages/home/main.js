@@ -298,15 +298,18 @@ const Home = (props) => {
 		const searchInNew = localStorage.getItem('TEA_searchInNewWindow');
 		
 		const whatDoWeSearch = e.currentTarget.url.value;
-		let formatSearchInput;
-		if (whatDoWeSearch.slice(0, 1) === '#') {
-			formatSearchInput = whatDoWeSearch.replace('#', '%23');
-		} else if (whatDoWeSearch.slice(0, 1) === '%') {
-			formatSearchInput = whatDoWeSearch.replace('%', '%25');
-		} else {
-			formatSearchInput = whatDoWeSearch;
-		}
-		
+
+		const specialChars = ['#', '%', '&'];
+		let formatSearchInput = whatDoWeSearch;
+		specialChars.some((element) => {
+			if (whatDoWeSearch.includes(element)) {
+				formatSearchInput = whatDoWeSearch
+					.replace('%', '%25')
+					.replace('#', '%23')
+					.replace('&', '%26');
+			}
+		});
+
 		if (formatSearchInput === "") return;
 		const setUrl = `${enginePrefix}${formatSearchInput}`;
 		window.open(setUrl, !!searchInNew ? '_blank' : '_self');
